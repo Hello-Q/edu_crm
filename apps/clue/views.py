@@ -15,19 +15,27 @@ from django_filters.rest_framework import DjangoFilterBackend
 from apps.clue import filters
 
 
-class SourceChannelViewSet(viewsets.ModelViewSet):
+class ChannelTypeViewSet(viewsets.ModelViewSet):
+    """
+    渠道分类
+    """
+    queryset = models.ChannelType.objects.all()
+    serializer_class = serializers.ChannelTypeSerializer
+
+
+class ChannelViewSet(viewsets.ModelViewSet):
     """
     渠道类型
-    list: 列出渠道类型，未传参讲返回所有渠道，渠道筛选时，可以先请求一级分类，然后
     """
     queryset = models.Channel.objects.all()
-    serializer_class = serializers.SourceChannelSerializer
-    pagination_class = StandardResultsSetPagination
+    serializer_class = serializers.ChannelSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = filters.SourceChannelFilter
 
 
 class ClueViewSet(viewsets.ModelViewSet):
+    """
+    线索资源
+    """
     queryset = models.Clue.objects.all()
     serializer_class = serializers.ClueSerializer
     pagination_class = StandardResultsSetPagination

@@ -1,7 +1,9 @@
 from django_filters import rest_framework as filters
+from apps.clue import models
 
 
 class SourceChannelFilter(filters.FilterSet):
 
     class Meta:
-        filter_fields = ['name']
+        model = models.Channel
+        fields = ['name']
