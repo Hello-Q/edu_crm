@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework import mixins
 # Create your views here.
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
-
+from django_filters.rest_framework import DjangoFilterBackend
 
 class Login(ObtainJSONWebToken):
     """
@@ -57,28 +57,52 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework_jwt.utils import jwt_decode_handler
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view
+from rest_framework import status
+from jwt import exceptions
+import coreapi
+from rest_framework.schemas import AutoSchema, ManualSchema
+from rest_framework.compat import coreapi, coreschema
 
 
-class GetUserInfo(APIView):
+class GetUserInfo(generics.RetrieveAPIView):
+    """
+    传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
+    """
+    queryset = models.UserProfile.objects.all()
+    serializer_class = models.UserProfile
+    schema = AutoSchema(manual_fields=[
+        coreapi.Field(
+            "token",
+            required=True,
+            location="query",
+            schema=coreschema.String(
+                title='token',
+                description="用户token值"
+            )
+        ),
+    ])
 
-
-    def get(self, request):
-        User = get_user_model()
-        if request.method == 'GET':
-            print(1344)
-            # 获取请求参数token的值
-            token = request.GET.get('token')
-            print(1213, token)
-            # 顶一个空数组来接收token解析后的值
-            toke_user = []
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_queryset()
+        # 获取请求参数token的值
+        token = request.GET.get('token')
+        if not token:
+            return Response({'msg': '未提供token信息'}, status=status.HTTP_400_BAD_REQUEST)
+        # 顶一个空数组来接收token解析后的值
+        try:
             toke_user = jwt_decode_handler(token)
-            # 获得user_id
-            user_id = toke_user["user_id"]
-            # 通过user_id查询用户信息
-            user_info = User.objects.get(pk=user_id)
-            serializer = serializers.UserSerializer(user_info)
-
-            return Response(serializer.data)
+        except exceptions.DecodeError as e:
+            return Response({'msg': 'token值解析异常,请检查token后重试, {}'.format(e)}, status=status.HTTP_400_BAD_REQUEST)
+        # return Response({'msg': '未查询到用户,用户可能已被删除'}, status=status.HTTP_404_NOT_FOUND)
+        # 获得user_id
+        user_id = toke_user["user_id"]
+        # 通过user_id查询用户信息
+        try:
+            user_info = user.get(pk=user_id)
+        except models.UserProfile.DoesNotExist as e:
+            return Response({'msg': '未查询到用户,用户可能已被删除, {}'.format(e)}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = serializers.UserSerializer(user_info)
+        return Response(serializer.data)
 
 
 
