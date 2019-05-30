@@ -6,10 +6,12 @@ from . import views
 router = DefaultRouter()
 router.register('', views.User)
 
+
 urlpatterns = [
     path('login/', views.Login.as_view()),  # 请求token
     path('token-verify/', views.TokenVerify.as_view()),  # 验证token
     path('token-refresh/', views.TokenRefresh.as_view()),  # 刷新token到期时间
+    path('user-info/', views.GetUserInfo.as_view()),
     path('', include(router.urls)),
     # path('user/', views.CreateUser),
 ]
