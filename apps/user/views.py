@@ -1,13 +1,13 @@
-from rest_framework.viewsets import GenericViewSet
 from . import serializers
 from . import models
 from rest_framework import viewsets, generics, mixins
 from rest_framework_jwt.views import ObtainJSONWebToken, VerifyJSONWebToken, RefreshJSONWebToken
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import mixins
-# Create your views here.
-from rest_framework_jwt.serializers import JSONWebTokenSerializer
+from rest_framework_jwt.utils import jwt_decode_handler
+from rest_framework import status
+from jwt import exceptions
+from rest_framework.schemas import AutoSchema, ManualSchema
+from rest_framework.compat import coreapi, coreschema
 
 
 class Login(ObtainJSONWebToken):
@@ -37,48 +37,54 @@ class User(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
 
 
-# class LoginInfo(mixins.RetrieveModelMixin,
-#               mixins.UpdateModelMixin,
-#               mixins.DestroyModelMixin,
-#               generics.GenericAPIView):
-#     queryset = models.UserProfile.objects.all()
-#     serializer_class = serializers.UserSerializer
-#
-#     def get(self, request, *args, **kwargs):
-#         print()
-#         return self.retrieve(request, *args, **kwargs)
-#     def put(self, request, *args, **kwargs):
-#         return self.update(request, *args, **kwargs)
-#     def delete(self, request, *args, **kwargs):
-#         return self.destroy(request, *args, **kwargs)
+class PersonalInfo(generics.RetrieveAPIView):
+    """
+    传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
+    """
+    queryset = models.UserProfile.objects.all()
+    serializer_class = models.UserProfile
+    schema = AutoSchema(manual_fields=[
+        coreapi.Field(
+            "token",
+            required=True,
+            location="query",
+            schema=coreschema.String(
+                title='token',
+                description="用户token值"
+            )
+        ),
+    ])
 
-
-from django.http import HttpResponse, JsonResponse
-from rest_framework_jwt.utils import jwt_decode_handler
-from django.contrib.auth import get_user_model
-from rest_framework.decorators import api_view
-
-
-class GetUserInfo(APIView):
-
-
-    def get(self, request):
-        User = get_user_model()
-        if request.method == 'GET':
-            print(1344)
-            # 获取请求参数token的值
-            token = request.GET.get('token')
-            print(1213, token)
-            # 顶一个空数组来接收token解析后的值
-            toke_user = []
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_queryset()
+        # 获取请求参数token的值
+        token = request.GET.get('token')
+        if not token:
+            msg = {
+                'msg': '未提供token信息'
+            }
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+        # 顶一个空数组来接收token解析后的值
+        try:
             toke_user = jwt_decode_handler(token)
-            # 获得user_id
-            user_id = toke_user["user_id"]
-            # 通过user_id查询用户信息
-            user_info = User.objects.get(pk=user_id)
-            serializer = serializers.UserSerializer(user_info)
-
-            return Response(serializer.data)
+        except exceptions.DecodeError as e:
+            msg = {
+                'msg': 'token值解析异常,请检查token后重试, {}'.format(e)
+            }
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+        # return Response({'msg': '未查询到用户,用户可能已被删除'}, status=status.HTTP_404_NOT_FOUND)
+        # 获得user_id
+        user_id = toke_user["user_id"]
+        # 通过user_id查询用户信息
+        try:
+            user_info = user.get(pk=user_id)
+        except models.UserProfile.DoesNotExist as e:
+            msg = {
+                'msg': '未查询到用户,用户可能已被删除, {}'.format(e)
+            }
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+        serializer = serializers.UserSerializer(user_info)
+        return Response(serializer.data)
 
 
 
