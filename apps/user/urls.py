@@ -11,7 +11,7 @@ urlpatterns = [
     path('login/', views.Login.as_view()),  # 请求token
     path('token-verify/', views.TokenVerify.as_view()),  # 验证token
     path('token-refresh/', views.TokenRefresh.as_view()),  # 刷新token到期时间
-    path('personage-info/', views.PersonalInfo.as_view()),
+    path('personage-info/', views.PersonalInfo.as_view()),  # 从token中解析用户信息
     path('', include(router.urls)),
     # path('user/', views.CreateUser),
 ]

@@ -43,6 +43,7 @@ class PersonalInfo(generics.RetrieveAPIView):
     """
     queryset = models.UserProfile.objects.all()
     serializer_class = models.UserProfile
+    permission_classes = ()
     schema = AutoSchema(manual_fields=[
         coreapi.Field(
             "token",
@@ -58,7 +59,7 @@ class PersonalInfo(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         user = self.get_queryset()
         # 获取请求参数token的值
-        token = request.GET.get('token')
+        token = request.query_params.get('token')
         if not token:
             msg = {
                 'msg': '未提供token信息'
@@ -72,7 +73,6 @@ class PersonalInfo(generics.RetrieveAPIView):
                 'msg': 'token值解析异常,请检查token后重试, {}'.format(e)
             }
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-        # return Response({'msg': '未查询到用户,用户可能已被删除'}, status=status.HTTP_404_NOT_FOUND)
         # 获得user_id
         user_id = toke_user["user_id"]
         # 通过user_id查询用户信息
