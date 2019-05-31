@@ -1,5 +1,8 @@
 from django.db import models
+
 from util.base_modle import BaseModel
+
+
 # Create your models here.
 
 
@@ -14,19 +17,17 @@ class ChannelType(BaseModel):
         return self.name
 
 
-
 class Channel(BaseModel):
     channel_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=10, verbose_name='渠道名称', unique=True,
                             help_text='渠道名称')
     channel_type_id = models.ForeignKey('clue.ChannelType', on_delete=models.SET_NULL,
-                                     null=True, verbose_name='渠道分类',
-                                     help_text='渠道分类id')
+                                        null=True, verbose_name='渠道分类',
+                                        help_text='渠道分类id')
     del_flag = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
-
 
 
 class Clue(BaseModel):
@@ -36,7 +37,7 @@ class Clue(BaseModel):
     name = models.CharField(max_length=10, verbose_name='姓名', help_text='姓名')
     tel = models.CharField(max_length=15, verbose_name='电话', help_text='电话')
     age = models.IntegerField(verbose_name='年龄', help_text='年龄', null=True, blank=True)
-    sex = models.IntegerField(choices=((0, '女'), (1, '男'), ), null=True, blank=True,
+    sex = models.IntegerField(choices=((0, '女'), (1, '男'),), null=True, blank=True,
                               verbose_name='性别', help_text='性别,0:女,1:男,未知留空')
     add = models.CharField(max_length=40, verbose_name='地址', help_text='地址', null=True, blank=True)
 
@@ -49,5 +50,3 @@ class Clue(BaseModel):
 
     def __str__(self):
         return self.name
-
-
