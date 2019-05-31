@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     # 新app
     'apps.clue',
     'apps.user',
+    'apps.edu_admin',
+    'apps.sys_set',
+    'apps.personnel',
     # 第三方app
     'rest_framework',
     # 'rest_framework.authtoken',
@@ -80,22 +83,25 @@ WSGI_APPLICATION = 'edu_crm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'HOST': '127.0.0.1',
-#         'PORT': 3306,
-#         'NAME': 'edu_crm',
-#         'USER': 'root',
-#         'PASSWORD': '123456',
-#     }
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     },
+#     # 'OPTIONS': {
+#     #         "init_command": "SET foreign_key_checks = 0;",
+#     # }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '127.0.0.1',
+        'PORT': 3306,
+        'NAME': 'edu_crm',
+        'USER': 'root',
+        'PASSWORD': '123456',
+    },
+}
 
 
 # Password validation
@@ -160,3 +166,4 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1)
 }
+
