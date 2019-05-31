@@ -145,8 +145,8 @@ STATIC_URL = '/static/'
 
 # rest_framework 设置
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION': (
-        'rest_framework.authentication.SessionAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'util.page_num.StandardResultsSetPagination',
@@ -160,8 +160,9 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'user.UserProfile'  # 因为models使用AbstractUser
 import datetime
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),# token的有效期
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # token的有效期
     # 'JWT_ISSUER': 'http://fasfdas.baicu',
+    'JWT_AUTH_COOKIE': 'token',
     'JWT_AUTH_HEADER_PREFIX': 'TOKEN',
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1)
