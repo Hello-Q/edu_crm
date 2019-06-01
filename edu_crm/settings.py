@@ -95,11 +95,12 @@ WSGI_APPLICATION = 'edu_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
+        # 'HOST': '127.0.0.1',
+        'HOST': '34.92.21.203',
         'PORT': 3306,
         'NAME': 'edu_crm',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '123456',
     },
 }
 
