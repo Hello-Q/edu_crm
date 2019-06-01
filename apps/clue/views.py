@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from apps.clue import models
 from apps.clue import serializers
 from rest_framework import generics
-from util.page_num import StandardResultsSetPagination
+from utils.page_num import StandardResultsSetPagination
 
 import coreapi
 import coreschema

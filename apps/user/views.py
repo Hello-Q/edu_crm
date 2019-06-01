@@ -85,7 +85,3 @@ class PersonalInfo(generics.RetrieveAPIView):
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
         serializer = serializers.UserSerializer(user_info)
         return Response(serializer.data)
-
-
-
-

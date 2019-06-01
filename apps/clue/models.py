@@ -1,33 +1,39 @@
 from django.db import models
 
-from util.base_modle import BaseModel
+from utils.base_modle import BaseModel
 
 
 # Create your models here.
 
 
 class ChannelType(BaseModel):
-    channel_type_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=10, unique=True, verbose_name='渠道分类',
-                            help_text='渠道分类')
-
+    channel_type_id = models.AutoField(primary_key=True, verbose_name='渠道分类编号', help_text='渠道分类id')
+    cha_type_name = models.CharField(max_length=10, unique=True, verbose_name='渠道分类名称', help_text='渠道分类名称')
     del_flag = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return self.cha_type_name
+
+    class Meta:
+        verbose_name = '渠道类型'
+        verbose_name_plural = '渠道类型管理'
 
 
 class Channel(BaseModel):
     channel_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=10, verbose_name='渠道名称', unique=True,
-                            help_text='渠道名称')
+    cha_name = models.CharField(max_length=10, verbose_name='渠道名称', unique=True,
+                                help_text='渠道名称')
     channel_type_id = models.ForeignKey('clue.ChannelType', on_delete=models.SET_NULL,
                                         null=True, verbose_name='渠道分类',
                                         help_text='渠道分类id')
     del_flag = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return self.cha_name
+
+    class Meta:
+        verbose_name = '渠道'
+        verbose_name_plural = '渠道管理'
 
 
 class Clue(BaseModel):

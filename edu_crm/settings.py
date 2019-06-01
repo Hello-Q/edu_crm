@@ -149,7 +149,7 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
-    'DEFAULT_PAGINATION_CLASS': 'util.page_num.StandardResultsSetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'utils.page_num.StandardResultsSetPagination',
 
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
