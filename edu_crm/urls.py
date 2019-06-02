@@ -25,6 +25,4 @@ urlpatterns = [
                                     description='-教育版',
                                     )),
     path('clue/', include('apps.clue.urls')),
-    path('user/', include('apps.user.urls')),
-
 ]

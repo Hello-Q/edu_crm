@@ -47,11 +47,11 @@ class Clue(BaseModel):
                               verbose_name='性别', help_text='性别,0:女,1:男,未知留空')
     add = models.CharField(max_length=40, verbose_name='地址', help_text='地址', null=True, blank=True)
 
-    update_user = models.ForeignKey('user.UserProfile', related_name='channel_user_type_update',
+    update_user = models.ForeignKey('sys_set.UserProfile', related_name='channel_user_type_update',
                                     on_delete=models.DO_NOTHING, verbose_name='更新人')
-    delete_user = models.ForeignKey('user.UserProfile', related_name='channel_user_type_delete',
+    delete_user = models.ForeignKey('sys_set.UserProfile', related_name='channel_user_type_delete',
                                     on_delete=models.DO_NOTHING, verbose_name='删除人')
-    create_user = models.ForeignKey('user.UserProfile', related_name='channel_user_type_create',
+    create_user = models.ForeignKey('sys_set.UserProfile', related_name='channel_user_type_create',
                                     on_delete=models.DO_NOTHING, verbose_name='创建人')
 
     def __str__(self):

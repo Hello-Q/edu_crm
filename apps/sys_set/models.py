@@ -1,5 +1,7 @@
 from django.db import models
 from utils.base_modle import BaseModel
+from django.contrib.auth.models import AbstractUser
+
 # Create your models here.
 
 
@@ -37,3 +39,7 @@ class Department(BaseModel):
     class Meta:
         verbose_name = '部门'
         verbose_name_plural = '部门管理'
+
+
+class UserProfile(AbstractUser):
+    age = models.IntegerField(verbose_name="年龄", default="1")

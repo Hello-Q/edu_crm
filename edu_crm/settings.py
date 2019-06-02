@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 新app
     'apps.clue',
-    'apps.user',
     'apps.edu_admin',
     'apps.sys_set',
     # 第三方app
@@ -159,7 +158,7 @@ REST_FRAMEWORK = {
 
 }
 
-AUTH_USER_MODEL = 'user.UserProfile'  # 因为models使用AbstractUser
+AUTH_USER_MODEL = 'sys_set.UserProfile'  # 因为models使用AbstractUser
 import datetime
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # token的有效期
