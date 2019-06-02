@@ -9,7 +9,7 @@ from utils.base_modle import BaseModel
 class ChannelType(BaseModel):
     channel_type_id = models.AutoField(primary_key=True, verbose_name='渠道分类编号', help_text='渠道分类id')
     cha_type_name = models.CharField(max_length=10, unique=True, verbose_name='渠道分类名称', help_text='渠道分类名称')
-    del_flag = models.BooleanField(default=False)
+    del_flag = models.BooleanField('删除标记', default=False)
 
     def __str__(self):
         return self.cha_type_name
@@ -26,7 +26,7 @@ class Channel(BaseModel):
     channel_type_id = models.ForeignKey('clue.ChannelType', on_delete=models.SET_NULL,
                                         null=True, verbose_name='渠道分类',
                                         help_text='渠道分类id')
-    del_flag = models.BooleanField(default=False)
+    del_flag = models.BooleanField('删除标记', default=False)
 
     def __str__(self):
         return self.cha_name

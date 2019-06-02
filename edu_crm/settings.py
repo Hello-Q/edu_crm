@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'apps.user',
     'apps.edu_admin',
     'apps.sys_set',
-    'apps.personnel',
     # 第三方app
     'rest_framework',
     # 'rest_framework.authtoken',
@@ -54,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'utils.middleware.Row1',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -95,12 +95,12 @@ WSGI_APPLICATION = 'edu_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        # 'HOST': '127.0.0.1',
-        'HOST': '34.92.21.203',
+        'HOST': '127.0.0.1',
+        # 'HOST': '34.92.21.203',
         'PORT': 3306,
         'NAME': 'edu_crm',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'root',
     },
 }
 
@@ -154,6 +154,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+
     ),
 
 }
