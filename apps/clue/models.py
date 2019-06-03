@@ -14,6 +14,9 @@ class ChannelType(BaseModel):
     def __str__(self):
         return self.cha_type_name
 
+    def __all__(self):
+        return [self.channel_type_id, self.cha_type_name, self.del_flag]
+
     class Meta:
         verbose_name = '渠道类型'
         verbose_name_plural = '渠道类型管理'

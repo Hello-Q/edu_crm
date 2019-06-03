@@ -6,4 +6,9 @@ from . import models
 # Register your models here.
 @admin.register(models.Course)
 class ClueTypeAdmin(admin.ModelAdmin):
-    list_display = ['cou_id']
+    exclude = []
+
+
+@admin.register(models.Subjects)
+class SubjectsAdmin(admin.ModelAdmin):
+    exclude = []

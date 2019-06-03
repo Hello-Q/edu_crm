@@ -14,7 +14,7 @@ from rest_framework.schemas import AutoSchema
 from rest_framework.compat import coreapi, coreschema
 
 
-class Login(ObtainJSONWebToken):
+class LoginView(ObtainJSONWebToken):
     """
     接受用户名和密码进行验证
     验证通过返回token进行登录
@@ -97,3 +97,17 @@ class PersonalInfo(generics.RetrieveAPIView,
 #     print(request)
 #     return HttpResponse('CHENG')
 
+class OrganizationViewSet(viewsets.ModelViewSet):
+    """
+    操作公司数据
+    """
+    queryset = models.Organization.objects.all()
+    serializer_class = serializers.OrganizationSerializer
+
+
+class DepartmentViewSet(viewsets.ModelViewSet):
+    """
+    部门数据
+    """
+    queryset = models.Department.objects.all()
+    serializer_class = serializers.DepartmentSerializer

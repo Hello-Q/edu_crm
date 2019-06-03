@@ -3,7 +3,7 @@ from rest_framework import serializers
 from drf_dynamic_fields import DynamicFieldsMixin
 
 
-class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+class UserSerializer(DynamicFieldsMixin, serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.UserProfile
@@ -15,8 +15,15 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         return user
 
 
-class OrganizationSerializer(serializers.ModelSerializer):
+class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        models = models.Organization
+        model = models.Organization
+        fields = "__all__"
+
+
+class DepartmentSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = models.Department
         fields = "__all__"
