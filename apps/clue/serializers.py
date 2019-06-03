@@ -20,4 +20,7 @@ class ClueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Clue
-        fields = "__all__"
+        exclude = ["operator", "creator"]
+
+    def create(self, validated_data):
+        operator = models.Clue.objects.create()

@@ -41,5 +41,13 @@ class Department(BaseModel):
         verbose_name_plural = '部门管理'
 
 
-class UserProfile(AbstractUser):
+class UserProfile(AbstractUser, BaseModel):
     age = models.IntegerField(verbose_name="年龄", default="1")
+    # org_id = models.ForeignKey('sys_set.Organization', verbose_name='所属公司', help_text='所属公司id',
+    #                            on_delete=models.DO_NOTHING)
+    # dep_id = models.ForeignKey('sys_set.Department', verbose_name='所属部门', help_text='部门id',
+    #                            on_delete=models.DO_NOTHING)
+
+    class Meta:
+        verbose_name = '员工'
+        verbose_name_plural = '员工管理'

@@ -46,13 +46,11 @@ class Clue(BaseModel):
     sex = models.IntegerField(choices=((0, '女'), (1, '男'),), null=True, blank=True,
                               verbose_name='性别', help_text='性别,0:女,1:男,未知留空')
     add = models.CharField(max_length=40, verbose_name='地址', help_text='地址', null=True, blank=True)
-
-    update_user = models.ForeignKey('sys_set.UserProfile', related_name='channel_user_type_update',
-                                    on_delete=models.DO_NOTHING, verbose_name='更新人')
-    delete_user = models.ForeignKey('sys_set.UserProfile', related_name='channel_user_type_delete',
-                                    on_delete=models.DO_NOTHING, verbose_name='删除人')
-    create_user = models.ForeignKey('sys_set.UserProfile', related_name='channel_user_type_create',
-                                    on_delete=models.DO_NOTHING, verbose_name='创建人')
+    intended_course = models.ForeignKey('edu_admin.Course', verbose_name='意向课程', help_text='意向课程', on_delete=models.DO_NOTHING, null=True, blank=True)
+    intended_school = models.ForeignKey('sys_set.Department', verbose_name='意向小区', help_text='意向校区', on_delete=models.DO_NOTHING, null=True, blank=True)
+    follow_up_people = models.ForeignKey('sys_set.UserProfile', verbose_name='跟进人', help_text='跟进人', on_delete=models.DO_NOTHING, null=True, blank=True)
+    creator = models.ForeignKey('sys_set.UserProfile', related_name='clue_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
+    operator = models.ForeignKey('sys_set.UserProfile', related_name='clue_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
 
     def __str__(self):
         return self.name

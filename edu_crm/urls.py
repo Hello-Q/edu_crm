@@ -24,5 +24,7 @@ urlpatterns = [
     path('docs/', include_docs_urls(title='API文档',
                                     description='-教育版',
                                     )),
+    path('sys-set/', include('apps.sys_set.urls')),
     path('clue/', include('apps.clue.urls')),
+
 ]

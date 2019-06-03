@@ -2,9 +2,10 @@ from django.shortcuts import render
 
 # Create your views here.
 from apps.sys_set import serializers
-from . import models
+from apps.sys_set import models
 from rest_framework import viewsets, generics
 from rest_framework_jwt.views import ObtainJSONWebToken, VerifyJSONWebToken, RefreshJSONWebToken
+from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework_jwt.utils import jwt_decode_handler
 from rest_framework import status
@@ -40,7 +41,8 @@ class User(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
 
 
-class PersonalInfo(generics.RetrieveAPIView):
+class PersonalInfo(generics.RetrieveAPIView,
+                   generics.GenericAPIView):
     """
     传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
     """
@@ -88,3 +90,10 @@ class PersonalInfo(generics.RetrieveAPIView):
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
         serializer = serializers.UserSerializer(user_info)
         return Response(serializer.data)
+
+
+# from django.http import HttpResponse
+# def test(request):
+#     print(request)
+#     return HttpResponse('CHENG')
+
