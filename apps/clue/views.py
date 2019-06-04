@@ -40,9 +40,9 @@ class ClueViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ClueSerializer
     pagination_class = StandardResultsSetPagination
 
-    # def perform_create(self, serializer):
-    #     # 自动保存创建人和更新人
-    #     serializer.save(operator=self.request.user, creator=self.request.user)
-    #
-    # def perform_update(self, serializer):
-    #     serializer.save(operator=self.request.user)
+    def perform_create(self, serializer):
+        # 自动保存创建人和更新人
+        serializer.save(operator=self.request.user, creator=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(operator=self.request.user)

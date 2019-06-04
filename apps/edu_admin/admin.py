@@ -11,4 +11,9 @@ class ClueTypeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Subjects)
 class SubjectsAdmin(admin.ModelAdmin):
-    exclude = []
+    pass
+
+
+@admin.register(models.Teacher)
+class TeacherAdmin(admin.ModelAdmin):
+    list_display = ['tea_id', 'user_id']

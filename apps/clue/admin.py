@@ -24,3 +24,11 @@ class ChannelAdmin(admin.ModelAdmin):
     """
     list_display = ['channel_id', 'channel_type_id', 'del_flag']
 
+
+@admin.register(models.Clue)
+class ClueAdmin(admin.ModelAdmin):
+    """
+    注册渠道管理
+    """
+    list_display = ['name']
+

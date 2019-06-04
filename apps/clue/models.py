@@ -76,3 +76,7 @@ class Clue(BaseModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = '线索'
+        verbose_name_plural = '线索管理'

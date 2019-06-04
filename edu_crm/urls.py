@@ -26,5 +26,6 @@ urlpatterns = [
                                     )),
     path('sys-set/', include('apps.sys_set.urls')),
     path('clue/', include('apps.clue.urls')),
+    path('edu_admin/', include('apps.edu_admin.urls'))
 
 ]

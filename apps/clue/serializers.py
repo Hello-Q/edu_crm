@@ -16,11 +16,8 @@ class ChannelSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ClueSerializer(serializers.ModelSerializer):
+class ClueSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Clue
-        exclude = ["operator", "creator"]
-
-    def create(self, validated_data):
-        operator = models.Clue.objects.create()
+        exclude = []
