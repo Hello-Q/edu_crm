@@ -20,6 +20,9 @@ class ChannelType(BaseModel):
     class Meta:
         verbose_name = '渠道类型'
         verbose_name_plural = '渠道类型管理'
+        permissions = (
+            ('view_ChannelType', 'Can view 渠道类型'),
+        )
 
 
 class Channel(BaseModel):

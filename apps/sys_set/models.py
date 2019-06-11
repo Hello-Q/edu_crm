@@ -36,8 +36,6 @@ class Department(BaseModel):
     creator = models.ForeignKey('sys_set.UserProfile', related_name='department_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys_set.UserProfile', related_name='department_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
 
-
-
     def __str__(self):
         return self.dep_name
 

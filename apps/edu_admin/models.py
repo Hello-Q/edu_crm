@@ -33,8 +33,8 @@ class Course(models.Model):
         return self.cou_name
 
     class Meta:
-        verbose_name = '课程表'
-        verbose_name_plural = '课程表'
+        verbose_name = '课程'
+        verbose_name_plural = '课程管理'
 
 
 class Teacher(models.Model):

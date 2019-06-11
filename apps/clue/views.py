@@ -13,7 +13,24 @@ from rest_framework.response import Response
 from collections import OrderedDict
 from django_filters.rest_framework import DjangoFilterBackend
 from apps.clue import filters
+from rest_framework import permissions
+from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, DjangoModelPermissions
 
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has an `owner` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        print(obj)
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        # if request.method in permissions.SAFE_METHODS:
+        #     return True
+
+        # Instance must have an attribute named `owner`.
+        return False
 
 class ChannelTypeViewSet(viewsets.ModelViewSet):
     """
@@ -22,6 +39,7 @@ class ChannelTypeViewSet(viewsets.ModelViewSet):
     queryset = models.ChannelType.objects.all()
     serializer_class = serializers.ChannelTypeSerializer
 
+    permission_classes = (DjangoModelPermissions,)
 
 class ChannelViewSet(viewsets.ModelViewSet):
     """

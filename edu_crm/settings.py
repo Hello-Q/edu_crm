@@ -146,8 +146,8 @@ STATIC_URL = '/static/'
 # rest_framework 设置
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'utils.page_num.StandardResultsSetPagination',
 
@@ -155,7 +155,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
 
     ),
-
 }
 
 AUTH_USER_MODEL = 'sys_set.UserProfile'  # 因为models使用AbstractUser
