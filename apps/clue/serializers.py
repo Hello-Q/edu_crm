@@ -2,14 +2,14 @@ from rest_framework import serializers
 from apps.clue import models
 
 
-class ChannelTypeSerializer(serializers.ModelSerializer):
+class ChannelTypeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.ChannelType
         fields = "__all__"
 
 
-class ChannelSerializer(serializers.ModelSerializer):
+class ChannelSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Channel
