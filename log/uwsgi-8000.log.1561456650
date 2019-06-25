@@ -1,0 +1,9 @@
+[pid: 13779|app: 0|req: 11/11] 60.215.45.234 () {40 vars in 833 bytes} [Tue Jun 25 17:57:28 2019] GET /admin/ => generated 0 bytes in 1 msecs (HTTP/1.1 302) 7 headers in 265 bytes (1 switches on core 0)
+[pid: 13779|app: 0|req: 12/12] 60.215.45.234 () {40 vars in 870 bytes} [Tue Jun 25 17:57:29 2019] GET /admin/login/?next=/admin/ => generated 1857 bytes in 13 msecs (HTTP/1.1 200) 7 headers in 381 bytes (1 switches on core 0)
+Not Found: /static/admin/css/login.css
+[pid: 13779|app: 0|req: 13/13] 60.215.45.234 () {38 vars in 738 bytes} [Tue Jun 25 17:57:29 2019] GET /static/admin/css/login.css => generated 2557 bytes in 4 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
+Not Found: /static/admin/css/responsive.css
+[pid: 13779|app: 0|req: 14/14] 60.215.45.234 () {38 vars in 748 bytes} [Tue Jun 25 17:57:29 2019] GET /static/admin/css/responsive.css => generated 2572 bytes in 3 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
+Not Found: /static/admin/css/base.css
+[pid: 13779|app: 0|req: 15/15] 60.215.45.234 () {38 vars in 736 bytes} [Tue Jun 25 17:57:29 2019] GET /static/admin/css/base.css => generated 2554 bytes in 3 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
+Tue Jun 25 17:57:30 2019 - logsize: 1232, triggering rotation to /home/yanqing0709/python/edu_crm_api/log/uwsgi-8000.log.1561456650...
