@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
+import datetime
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -139,8 +139,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
+# 配置静态文件地址
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 
 # rest_framework 设置
@@ -158,7 +159,7 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'sys_set.UserProfile'  # 因为models使用AbstractUser
-import datetime
+
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # token的有效期
     # 'JWT_ISSUER': 'http://fasfdas.baicu',
