@@ -47,7 +47,7 @@ class PersonalInfo(generics.RetrieveAPIView,
     传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
     """
     queryset = models.UserProfile.objects.all()
-    serializer_class = models.UserProfile
+    serializer_class = serializers.UserSerializer
     permission_classes = ()
     schema = AutoSchema(manual_fields=[
         coreapi.Field(
@@ -62,6 +62,9 @@ class PersonalInfo(generics.RetrieveAPIView,
     ])
 
     def retrieve(self, request, *args, **kwargs):
+        serializer_context = {
+            'request': request,
+        }
         user = self.get_queryset()
         # 获取请求参数token的值
         token = request.query_params.get('token')
@@ -88,7 +91,8 @@ class PersonalInfo(generics.RetrieveAPIView,
                 'msg': '未查询到用户,用户可能已被删除, {}'.format(e)
             }
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-        serializer = serializers.UserSerializer(user_info)
+        serializer = serializers.UserSerializer(user_info, context=serializer_context)
+        print(serializers)
         return Response(serializer.data)
 
 
