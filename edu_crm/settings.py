@@ -99,7 +99,7 @@ DATABASES = {
         'PORT': 3306,
         'NAME': 'edu_crm',
         'USER': 'root',
-        'PASSWORD': 'ZYQ1994zyq',
+        'PASSWORD': 'ZYQ1994zyq..',
     },
 }
 
