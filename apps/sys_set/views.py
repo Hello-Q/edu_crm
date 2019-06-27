@@ -93,10 +93,11 @@ class PersonalInfo(generics.RetrieveAPIView,
             }
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
         serializer = serializers.UserSerializer(user_info, context=serializer_context)
-        print(serializers)
         data = {'code': 20000, 'data': serializer.data, }
-        data = json.dumps(data, ensure_ascii=False)
-        return Response(data)
+        print(type(data))
+        # data = json.dumps(data, ensure_ascii=False)
+        print(type(serializer.data))
+        return JsonResponse(data, safe=False)
 
 
 # from django.http import HttpResponse
