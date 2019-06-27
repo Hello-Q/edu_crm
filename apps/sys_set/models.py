@@ -50,6 +50,7 @@ class UserProfile(AbstractUser, BaseModel):
     #                            on_delete=models.DO_NOTHING)
     # dep_id = models.ForeignKey('sys_set.Department', verbose_name='所属部门', help_text='部门id',
     #                            on_delete=models.DO_NOTHING)
+    head_pic = models.URLField(verbose_name='头像', help_text='用户头像url',null=True, blank=True)
 
     class Meta:
         verbose_name = '员工'

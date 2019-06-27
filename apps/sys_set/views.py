@@ -12,7 +12,14 @@ from rest_framework import status
 from jwt import exceptions
 from rest_framework.schemas import AutoSchema
 from rest_framework.compat import coreapi, coreschema
-
+from django.contrib.auth.models import Permission
+from rest_framework.views import APIView
+from django.http import FileResponse, Http404, JsonResponse
+from django.views import View
+import os
+import hashlib
+from utils import HTTPcode
+import json
 
 class LoginView(ObtainJSONWebToken):
     """
@@ -33,12 +40,6 @@ class TokenRefresh(RefreshJSONWebToken):
     """
 
 
-class User(viewsets.ModelViewSet):
-    """
-    对系统用户进行数据操作
-    """
-    queryset = models.UserProfile.objects.all()
-    serializer_class = serializers.UserSerializer
 
 
 class PersonalInfo(generics.RetrieveAPIView,
@@ -93,7 +94,9 @@ class PersonalInfo(generics.RetrieveAPIView,
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
         serializer = serializers.UserSerializer(user_info, context=serializer_context)
         print(serializers)
-        return Response(serializer.data)
+        data = {'code': 20000, 'data': serializer.data, }
+        data = json.dumps(data, ensure_ascii=False)
+        return Response(data)
 
 
 # from django.http import HttpResponse
@@ -115,3 +118,57 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    对系统用户进行数据操作
+    """
+    queryset = models.UserProfile.objects.all()
+    serializer_class = serializers.UserSerializer
+
+
+class PermissionViewSet(viewsets.ModelViewSet):
+    """
+    权限列表
+    """
+    queryset = Permission.objects.all()
+    serializer_class = serializers.PermissionSerializer
+
+
+# class ImageView(View, HTTPcode):
+#
+#     def get(self, request):
+#         md5 = request.GET.get('md5')
+#         img_file = os.path.join(settings.IMAGES_DIR, md5 + '.jpg')
+#         if not os.path.exists(img_file):
+#             return Http404()
+#         else:
+#
+#             return FileResponse(open(img_file, 'rb'), content_type='image/jpg')
+
+
+class UpdateHeadPic(mixins.UpdateModelMixin,
+                    generics.GenericAPIView,):
+    def update(self, request, *args, **kwargs):
+        files = request.FILES
+        print(files)
+        json.dumps({'a': 1})
+        return Response(json.dumps({'a': 1}))
+
+    # def post(self, request):
+    #     files = request.FILES
+    #     print(files)
+    #     response_data = []
+    #     for key, uploaded_file in files.items():
+    #         content = uploaded_file.read()
+    #         md5 = hashlib.md5(content).hexdigest()
+    #         path = os.path.join(settings.IMAGES_DIR, md5 + '.jpg')
+    #         with open(path, 'wb+') as f:
+    #             f.write(content)
+    #         response_data.append({
+    #             'name': md5 + '.jpg',
+    #             'md5': md5
+    #         })
+    #     response = self.wrap_json_response(data=response_data)
+    #     return JsonResponse(data=response, safe=False)

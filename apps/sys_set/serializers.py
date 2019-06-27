@@ -34,3 +34,10 @@ class PermissionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Permission
         fields = ["name", 'codename']
+
+
+class UpHeadPic(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.UserProfile
+        fields = ["head_pic"]
