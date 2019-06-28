@@ -21,6 +21,7 @@ import hashlib
 from utils import HTTPcode
 import json
 
+
 class LoginView(ObtainJSONWebToken):
     """
     接受用户名和密码进行验证
@@ -40,10 +41,7 @@ class TokenRefresh(RefreshJSONWebToken):
     """
 
 
-
-
-class PersonalInfo(generics.RetrieveAPIView,
-                   generics.GenericAPIView):
+class PersonalInfo(generics.RetrieveUpdateAPIView):
     """
     传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
     """
@@ -62,42 +60,73 @@ class PersonalInfo(generics.RetrieveAPIView,
         ),
     ])
 
-    def retrieve(self, request, *args, **kwargs):
-        serializer_context = {
-            'request': request,
-        }
-        user = self.get_queryset()
-        # 获取请求参数token的值
+    def get_user(self, request):
+
         token = request.query_params.get('token')
+        if token is None:
+            token = request.COOKIES.get('token')
+        # print(request.COOKIES)
         if not token:
             msg = {
                 'msg': '未提供token信息'
             }
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+            # return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+            return msg
         # 顶一个空数组来接收token解析后的值
         try:
-            toke_user = jwt_decode_handler(token)
+            user_toke = jwt_decode_handler(token)
         except exceptions.DecodeError as e:
             msg = {
                 'msg': 'token值解析异常,请检查token后重试, {}'.format(e)
             }
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+            return msg
         # 获得user_id
-        user_id = toke_user["user_id"]
+        user_id = user_toke["user_id"]
         # 通过user_id查询用户信息
         try:
-            user_info = user.get(pk=user_id)
+            user = self.get_queryset()
+            user = user.get(pk=user_id)
         except models.UserProfile.DoesNotExist as e:
             msg = {
                 'msg': '未查询到用户,用户可能已被删除, {}'.format(e)
             }
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-        serializer = serializers.UserSerializer(user_info, context=serializer_context)
-        data = {'code': 20000, 'data': serializer.data, }
-        print(type(data))
-        # data = json.dumps(data, ensure_ascii=False)
-        print(type(serializer.data))
-        return JsonResponse(data, safe=False)
+            return msg
+        return user
+
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_user(request)
+        if isinstance(user, models.UserProfile):
+
+            serializer = serializers.UserSerializer(self.get_user(request))
+            data = {'code': 20000, 'data': serializer.data, }
+            return Response(serializer.data)
+        else:
+            return Response(user, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_user(request)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        head_pic = request.FILES.get('head_pic1').read()
+
+        try:
+            haed_pic = head_pic.read()
+
+        except AttributeError as e:
+            print(e)
+            pass
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+
 
 
 # from django.http import HttpResponse
@@ -149,13 +178,6 @@ class PermissionViewSet(viewsets.ModelViewSet):
 #             return FileResponse(open(img_file, 'rb'), content_type='image/jpg')
 
 
-class UpdateHeadPic(mixins.UpdateModelMixin,
-                    generics.GenericAPIView,):
-    def update(self, request, *args, **kwargs):
-        files = request.FILES
-        print(files)
-        json.dumps({'a': 1})
-        return Response(json.dumps({'a': 1}))
 
     # def post(self, request):
     #     files = request.FILES
