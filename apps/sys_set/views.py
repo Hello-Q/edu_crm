@@ -41,6 +41,8 @@ class TokenRefresh(RefreshJSONWebToken):
     """
 
 
+from django.core.files.base import ContentFile
+from rest_framework.parsers import MultiPartParser, FileUploadParser
 class PersonalInfo(generics.RetrieveUpdateAPIView):
     """
     传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
@@ -48,6 +50,7 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
     queryset = models.UserProfile.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = ()
+    parser_classes = (MultiPartParser, FileUploadParser,)
     schema = AutoSchema(manual_fields=[
         coreapi.Field(
             "token",
@@ -94,10 +97,13 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
         return user
 
     def retrieve(self, request, *args, **kwargs):
+        serializer_context = {
+            'request': request,
+        }
         user = self.get_user(request)
         if isinstance(user, models.UserProfile):
 
-            serializer = serializers.UserSerializer(self.get_user(request))
+            serializer = serializers.UserSerializer(self.get_user(request), context=serializer_context)
             data = {'code': 20000, 'data': serializer.data, }
             return Response(serializer.data)
         else:
@@ -107,14 +113,8 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
         partial = kwargs.pop('partial', False)
         instance = self.get_user(request)
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        head_pic = request.FILES.get('head_pic1').read()
 
-        try:
-            haed_pic = head_pic.read()
-
-        except AttributeError as e:
-            print(e)
-            pass
+        file_content = ContentFile(request.FILES['img'].read())
 
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
