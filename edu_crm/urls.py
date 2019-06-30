@@ -15,19 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
 from rest_framework.authtoken import views
 from rest_framework.documentation import include_docs_urls
 from django.conf import settings
-from django.conf.urls.static import static
-
-
-def prod_static_url():
-    """
-    prod 模式下的 url 适配
-    """
-    from django.views import static
-    urlpattern = path(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT }, name='static')
-    return urlpattern
+from django.views import static
 
 
 urlpatterns = [
@@ -36,10 +28,13 @@ urlpatterns = [
     path('docs/', include_docs_urls(title='API文档',
                                     description='-教育版',
                                     )),
-    prod_static_url(),
+    # 配置线上静态资源
+    url('^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static'),
+    # 配置线上用户上传资源
+    url('^media/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
     path('sys-set/', include('apps.sys_set.urls')),
     path('clue/', include('apps.clue.urls')),
     path('edu_admin/', include('apps.edu_admin.urls'))
 
 ] \
-              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
