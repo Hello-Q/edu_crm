@@ -17,6 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views
 from rest_framework.documentation import include_docs_urls
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+def prod_static_url():
+    """
+    prod 模式下的 url 适配
+    """
+    from django.views import static
+    urlpattern = path(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT }, name='static')
+    return urlpattern
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,8 +36,10 @@ urlpatterns = [
     path('docs/', include_docs_urls(title='API文档',
                                     description='-教育版',
                                     )),
+    prod_static_url(),
     path('sys-set/', include('apps.sys_set.urls')),
     path('clue/', include('apps.clue.urls')),
     path('edu_admin/', include('apps.edu_admin.urls'))
 
-]
+] \
+              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
