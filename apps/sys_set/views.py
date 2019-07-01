@@ -12,7 +12,7 @@ from rest_framework import status
 from jwt import exceptions
 from rest_framework.schemas import AutoSchema
 from rest_framework.compat import coreapi, coreschema
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, Group
 from rest_framework.views import APIView
 from django.http import FileResponse, Http404, JsonResponse
 from django.views import View
@@ -166,32 +166,9 @@ class PermissionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PermissionSerializer
 
 
-# class ImageView(View, HTTPcode):
-#
-#     def get(self, request):
-#         md5 = request.GET.get('md5')
-#         img_file = os.path.join(settings.IMAGES_DIR, md5 + '.jpg')
-#         if not os.path.exists(img_file):
-#             return Http404()
-#         else:
-#
-#             return FileResponse(open(img_file, 'rb'), content_type='image/jpg')
-
-
-
-    # def post(self, request):
-    #     files = request.FILES
-    #     print(files)
-    #     response_data = []
-    #     for key, uploaded_file in files.items():
-    #         content = uploaded_file.read()
-    #         md5 = hashlib.md5(content).hexdigest()
-    #         path = os.path.join(settings.IMAGES_DIR, md5 + '.jpg')
-    #         with open(path, 'wb+') as f:
-    #             f.write(content)
-    #         response_data.append({
-    #             'name': md5 + '.jpg',
-    #             'md5': md5
-    #         })
-    #     response = self.wrap_json_response(data=response_data)
-    #     return JsonResponse(data=response, safe=False)
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    用户组
+    """
+    queryset = Group.objects.all()
+    serializer_class = serializers.GroupSerializer

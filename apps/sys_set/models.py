@@ -1,7 +1,8 @@
 from django.db import models
 from utils.base_modle import BaseModel
 from django.contrib.auth.models import AbstractUser
-
+from utils.storage import ImageStorage
+from django.contrib.auth.models import Group
 # Create your models here.
 
 
@@ -48,10 +49,20 @@ class UserProfile(AbstractUser, BaseModel):
     age = models.IntegerField(verbose_name="年龄", default="1")
     # org_id = models.ForeignKey('sys_set.Organization', verbose_name='所属公司', help_text='所属公司id',
     #                            on_delete=models.DO_NOTHING)
-    # dep_id = models.ForeignKey('sys_set.Department', verbose_name='所属部门', help_text='部门id',
-    #                            on_delete=models.DO_NOTHING)
-    head_pic = models.ImageField(upload_to='img/%Y/%m/%d', null=True, blank=True, verbose_name='图片url')
-    # head_pic = models.ImageField(upload_to='static/images/%Y/%m/%d', null=True, blank=True, verbose_name='图片url')
+    dep = models.ForeignKey('sys_set.Department', verbose_name='所属部门', help_text='部门id', on_delete=models.DO_NOTHING)
+    head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
+    nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name='groups',
+        blank=True,
+        help_text=
+            'The groups this user belongs to. A user will get all permissions '
+            'granted to each of their groups.'
+        ,
+        related_name="user_set",
+        related_query_name="user",
+    )
 
     class Meta:
         verbose_name = '员工'

@@ -7,6 +7,7 @@ router.register('user', views.UserViewSet)
 router.register('organization', views.OrganizationViewSet)
 router.register('department', views.DepartmentViewSet)
 router.register('permission', views.PermissionViewSet)
+router.register('group', views.GroupViewSet)
 # router.register('head-pic', views.HeadPortrait)
 # router.register('personal-info', views.PersonalInfo)
 
