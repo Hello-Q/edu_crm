@@ -45,23 +45,30 @@ class Department(BaseModel):
         verbose_name_plural = '部门管理'
 
 
-class Role(models.Model):
+class Role(BaseModel):
     role_id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
     role_name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
+    resources = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源')
 
     class Meta:
         verbose_name = '角色'
         verbose_name_plural = '角色管理'
 
 
+class Resource(BaseModel):
+    resource_id = models.AutoField(primary_key=True, verbose_name='资源编号', help_text='资源id')
+
+    class Meta:
+        verbose_name = '资源'
+        verbose_name_plural = '资源管理'
+
+
 class User(AbstractUser, BaseModel):
     age = models.IntegerField(verbose_name="年龄", default="1")
-    # org_id = models.ForeignKey('sys.Organization', verbose_name='所属公司', help_text='所属公司id',
-    #                            on_delete=models.DO_NOTHING)
     dep = models.ForeignKey('sys.Department', verbose_name='所属部门', help_text='部门id', null=True, blank=True, on_delete=models.DO_NOTHING)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
-    role_id = models.ManyToManyField('Role', verbose_name='角色')
+    role = models.ManyToManyField('Role', verbose_name='角色')
 
     class Meta:
         verbose_name = '员工'

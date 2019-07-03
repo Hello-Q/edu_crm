@@ -79,7 +79,7 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
         try:
             user = self.get_queryset()
             user = user.get(pk=user_id)
-        except models.UserProfile.DoesNotExist as e:
+        except models.User.DoesNotExist as e:
             msg = {
                 'msg': '未查询到用户,用户可能已被删除, {}'.format(e)
             }
@@ -91,7 +91,7 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
             'request': request,
         }
         user = self.get_user(request)
-        if isinstance(user, models.UserProfile):
+        if isinstance(user, models.User):
 
             serializer = serializers.UserSerializer(self.get_user(request), context=serializer_context)
             return Response(serializer.data)
