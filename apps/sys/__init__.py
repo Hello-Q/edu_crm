@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 import os
 
-default_app_config = 'apps.sys_set.SysSetConfig'
+default_app_config = 'apps.sys.SysSetConfig'
 
 
 # 获取当前App名称

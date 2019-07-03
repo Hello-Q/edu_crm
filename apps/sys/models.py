@@ -26,16 +26,16 @@ class Organization(BaseModel):
 
 class Department(BaseModel):
     dep_id = models.AutoField(primary_key=True, verbose_name='部门编号', help_text='部门id')
-    org_id = models.ForeignKey('sys_set.Organization', on_delete=models.DO_NOTHING,
-                               verbose_name='公司名称', help_text='公司id')
+    org = models.ForeignKey('sys.Organization', on_delete=models.DO_NOTHING,
+                            verbose_name='公司名称', help_text='公司id')
     dep_type = models.IntegerField('类型', choices=((0, '分公司'), (1, '校区'), (2, '部门'), ), null=True)
-    superior_id = models.ForeignKey('sys_set.Department', verbose_name='上级部门', on_delete=models.DO_NOTHING,
-                                    null=True, blank=True)
+    superior = models.ForeignKey('sys.Department', verbose_name='上级部门', on_delete=models.DO_NOTHING,
+                                 null=True, blank=True)
     dep_name = models.CharField(max_length=10, verbose_name='部门名称', help_text='部门名称')
     dep_tel = models.CharField(max_length=15, verbose_name='电话', help_text='电话', null=True)
 
-    creator = models.ForeignKey('sys_set.UserProfile', related_name='department_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
-    operator = models.ForeignKey('sys_set.UserProfile', related_name='department_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
+    creator = models.ForeignKey('sys.User', related_name='department_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
+    operator = models.ForeignKey('sys.User', related_name='department_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
 
     def __str__(self):
         return self.dep_name
@@ -45,24 +45,23 @@ class Department(BaseModel):
         verbose_name_plural = '部门管理'
 
 
-class UserProfile(AbstractUser, BaseModel):
+class Role(models.Model):
+    role_id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
+    role_name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
+
+    class Meta:
+        verbose_name = '角色'
+        verbose_name_plural = '角色管理'
+
+
+class User(AbstractUser, BaseModel):
     age = models.IntegerField(verbose_name="年龄", default="1")
-    # org_id = models.ForeignKey('sys_set.Organization', verbose_name='所属公司', help_text='所属公司id',
+    # org_id = models.ForeignKey('sys.Organization', verbose_name='所属公司', help_text='所属公司id',
     #                            on_delete=models.DO_NOTHING)
-    dep = models.ForeignKey('sys_set.Department', verbose_name='所属部门', help_text='部门id', on_delete=models.DO_NOTHING)
+    dep = models.ForeignKey('sys.Department', verbose_name='所属部门', help_text='部门id', on_delete=models.DO_NOTHING)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
-    groups = models.ManyToManyField(
-        Group,
-        verbose_name='groups',
-        blank=True,
-        help_text=
-            'The groups this user belongs to. A user will get all permissions '
-            'granted to each of their groups.'
-        ,
-        related_name="user_set",
-        related_query_name="user",
-    )
+    role_id = models.ManyToManyField('Role', verbose_name='角色')
 
     class Meta:
         verbose_name = '员工'

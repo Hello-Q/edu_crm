@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     # 新app
     'apps.clue',
     'apps.edu_admin',
-    'apps.sys_set',
+    'apps.sys',
     # 第三方app
     'rest_framework',
     # 'rest_framework.authtoken',
@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-AUTH_USER_MODEL = 'sys_set.UserProfile'  # 因为models使用AbstractUser
+AUTH_USER_MODEL = 'sys.User'  # 因为models使用AbstractUser
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # token的有效期

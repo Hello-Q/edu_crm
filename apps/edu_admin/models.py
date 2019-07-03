@@ -26,7 +26,7 @@ class Subjects(models.Model):
 class Course(models.Model):
     cou_id = models.AutoField(primary_key=True)
     cou_type = models.IntegerField('课程类型', choices=((0, '一对一'), (1, '班课')))
-    course_subjects = models.ForeignKey('edu_admin.Subjects', verbose_name='科系', on_delete=models.DO_NOTHING)
+    subjects = models.ForeignKey('edu_admin.Subjects', verbose_name='科系', on_delete=models.DO_NOTHING)
     cou_name = models.CharField(max_length=15, verbose_name='课程名称', help_text='课程名称')
 
     def __str__(self):
@@ -39,11 +39,11 @@ class Course(models.Model):
 
 class Teacher(models.Model):
     tea_id = models.AutoField(primary_key=True, verbose_name='教师编号', help_text='教师id')
-    user_id = models.ForeignKey('sys_set.UserProfile', verbose_name='教师姓名', help_text='员工id',
-                                on_delete=models.DO_NOTHING, null=True, blank=True)
+    user = models.ForeignKey('sys.User', verbose_name='教师姓名', help_text='员工id',
+                             on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
-        return self.user_id.username
+        return self.user
 
     class Meta:
         verbose_name = '教师'

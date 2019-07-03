@@ -10,8 +10,8 @@ from rest_framework_jwt.utils import jwt_decode_handler
 from rest_framework_jwt.views import ObtainJSONWebToken, VerifyJSONWebToken, RefreshJSONWebToken
 from django.core.files.base import ContentFile
 from rest_framework.parsers import MultiPartParser, FileUploadParser
-from apps.sys_set import models
-from apps.sys_set import serializers
+from apps.sys import models
+from apps.sys import serializers
 
 
 class LoginView(ObtainJSONWebToken):
@@ -37,7 +37,7 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
     """
     传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
     """
-    queryset = models.UserProfile.objects.all()
+    queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = ()
     parser_classes = (MultiPartParser, FileUploadParser,)
@@ -119,7 +119,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     对系统用户进行数据操作
     """
-    queryset = models.UserProfile.objects.all()
+    queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
 
 

@@ -14,7 +14,7 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_display = ['dep_id', 'org_id', 'dep_type', 'superior_id', 'dep_name', 'dep_tel', 'creator', 'operator', 'create_time', 'update_time', 'del_flag']
 
 
-@admin.register(models.UserProfile)
+@admin.register(models.User)
 class DepartmentAdmin(UserAdmin):
     list_display = ['id', 'username', 'first_name', 'last_name', 'age', 'last_login',
                     'is_superuser', 'email', 'is_staff']

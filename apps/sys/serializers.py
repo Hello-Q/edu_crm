@@ -20,7 +20,7 @@ class UserSerializer(DynamicFieldsMixin, serializers.HyperlinkedModelSerializer)
     # role = serializers.CharField(source='groups')
 
     class Meta:
-        model = models.UserProfile
+        model = models.User
         # exclude = []
         fields = ['id', 'url', 'username', 'nickname', 'head_pic', 'groups', 'dep', 'password']
 
