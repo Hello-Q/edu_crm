@@ -1,25 +1,17 @@
-from django.shortcuts import render
-
 # Create your views here.
-from apps.sys_set import serializers
-from apps.sys_set import models
-from rest_framework import viewsets, generics
-from rest_framework_jwt.views import ObtainJSONWebToken, VerifyJSONWebToken, RefreshJSONWebToken
-from rest_framework import mixins
-from rest_framework.response import Response
-from rest_framework_jwt.utils import jwt_decode_handler
-from rest_framework import status
-from jwt import exceptions
-from rest_framework.schemas import AutoSchema
-from rest_framework.compat import coreapi, coreschema
 from django.contrib.auth.models import Permission, Group
-from rest_framework.views import APIView
-from django.http import FileResponse, Http404, JsonResponse
-from django.views import View
-import os
-import hashlib
-from utils import HTTPcode
-import json
+from jwt import exceptions
+from rest_framework import status
+from rest_framework import viewsets, generics
+from rest_framework.compat import coreapi, coreschema
+from rest_framework.response import Response
+from rest_framework.schemas import AutoSchema
+from rest_framework_jwt.utils import jwt_decode_handler
+from rest_framework_jwt.views import ObtainJSONWebToken, VerifyJSONWebToken, RefreshJSONWebToken
+from django.core.files.base import ContentFile
+from rest_framework.parsers import MultiPartParser, FileUploadParser
+from apps.sys_set import models
+from apps.sys_set import serializers
 
 
 class LoginView(ObtainJSONWebToken):
@@ -41,8 +33,6 @@ class TokenRefresh(RefreshJSONWebToken):
     """
 
 
-from django.core.files.base import ContentFile
-from rest_framework.parsers import MultiPartParser, FileUploadParser
 class PersonalInfo(generics.RetrieveUpdateAPIView):
     """
     传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
@@ -104,35 +94,10 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
         if isinstance(user, models.UserProfile):
 
             serializer = serializers.UserSerializer(self.get_user(request), context=serializer_context)
-            data = {'code': 20000, 'data': serializer.data, }
             return Response(serializer.data)
         else:
             return Response(user, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_user(request)
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-
-        file_content = ContentFile(request.FILES['img'].read())
-
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
-
-        return Response(serializer.data)
-
-
-
-
-# from django.http import HttpResponse
-# def test(request):
-#     print(request)
-#     return HttpResponse('CHENG')
 
 class OrganizationViewSet(viewsets.ModelViewSet):
     """
