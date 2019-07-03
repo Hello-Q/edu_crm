@@ -32,9 +32,9 @@ urlpatterns = [
     url('^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static'),
     # 配置线上用户上传资源
     url('^media/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
-    path('sys-set/', include('apps.sys.urls')),
+    path('sys/', include('apps.sys.urls')),
     path('clue/', include('apps.clue.urls')),
-    path('edu_admin/', include('apps.edu_admin.urls'))
+    path('eduadmin/', include('apps.eduadmin.urls'))
 
 ] \
               # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

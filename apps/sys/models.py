@@ -58,7 +58,7 @@ class User(AbstractUser, BaseModel):
     age = models.IntegerField(verbose_name="年龄", default="1")
     # org_id = models.ForeignKey('sys.Organization', verbose_name='所属公司', help_text='所属公司id',
     #                            on_delete=models.DO_NOTHING)
-    dep = models.ForeignKey('sys.Department', verbose_name='所属部门', help_text='部门id', on_delete=models.DO_NOTHING)
+    dep = models.ForeignKey('sys.Department', verbose_name='所属部门', help_text='部门id', null=True, blank=True, on_delete=models.DO_NOTHING)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
     role_id = models.ManyToManyField('Role', verbose_name='角色')

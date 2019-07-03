@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 import os
 
-default_app_config = 'apps.edu_admin.EduAdminConfig'
+default_app_config = 'apps.eduadmin.EduAdminConfig'
 
 
 # 获取当前App名称

@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 新app
     'apps.clue',
-    'apps.edu_admin',
+    'apps.eduadmin',
     'apps.sys',
     # 第三方app
     'rest_framework',
