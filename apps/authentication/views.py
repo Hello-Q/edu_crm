@@ -10,10 +10,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from datetime import datetime
-from . import models
+from . import models, serializers
 # Create your views here.
 
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
+
+
 
 class LoginView(ObtainJSONWebToken):
     """
@@ -42,6 +44,18 @@ class LoginView(ObtainJSONWebToken):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class LogoutView(generics.DestroyAPIView):
+    queryset = models.Token.objects.all()
+    serializer_class = serializers.TokenSerializer
+
+
+    def destroy(self, request, *args, **kwargs):
+        token = request.COOKIES.get('token')
+        token = models.Token.objects.get(token=token)
+        instance = token
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TokenVerify(VerifyJSONWebToken):

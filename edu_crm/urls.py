@@ -34,7 +34,8 @@ urlpatterns = [
     url('^media/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
     path('sys/', include('apps.sys.urls')),
     path('clue/', include('apps.clue.urls')),
-    path('eduadmin/', include('apps.eduadmin.urls'))
+    path('eduadmin/', include('apps.eduadmin.urls')),
+    path('auth/', include('apps.authentication.urls')),
 
 ] \
               # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

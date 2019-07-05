@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.clue',
     'apps.eduadmin',
     'apps.sys',
+    'apps.authentication',
     # 第三方app
     'rest_framework',
     # 'rest_framework.authtoken',
@@ -55,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'utils.middleware.GetUserOrganization',
+    'utils.middleware.AuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'edu_crm.urls'
