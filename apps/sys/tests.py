@@ -1,3 +1,8 @@
-from django.test import TestCase
+from apps.sys.serializers import UserSerializer
+from apps.sys.models import User
 
-# Create your tests here.
+user = User.objects.all()[0]
+
+serializer = UserSerializer(user)
+
+print(serializer.data)

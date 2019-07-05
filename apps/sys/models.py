@@ -48,7 +48,10 @@ class Department(BaseModel):
 class Role(BaseModel):
     role_id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
     role_name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
-    resources = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源')
+    resource = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源')
+
+    def __str__(self):
+        return self.role_name
 
     class Meta:
         verbose_name = '角色'
@@ -57,6 +60,11 @@ class Role(BaseModel):
 
 class Resource(BaseModel):
     resource_id = models.AutoField(primary_key=True, verbose_name='资源编号', help_text='资源id')
+    resource_name = models.CharField(max_length=15, verbose_name='资源名称', help_text='资源名称')
+    resource_type = models.IntegerField(choices=((1, '菜单权限'), (2, '按钮权限')), verbose_name='资源类型', help_text='资源类型')
+
+    def __str__(self):
+        return self.resource_name
 
     class Meta:
         verbose_name = '资源'
@@ -65,10 +73,11 @@ class Resource(BaseModel):
 
 class User(AbstractUser, BaseModel):
     age = models.IntegerField(verbose_name="年龄", default="1")
-    dep = models.ForeignKey('sys.Department', verbose_name='所属部门', help_text='部门id', null=True, blank=True, on_delete=models.DO_NOTHING)
+    department = models.ForeignKey('sys.Department', verbose_name='所属部门', help_text='部门id', null=True, blank=True, on_delete=models.DO_NOTHING)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
     role = models.ManyToManyField('Role', verbose_name='角色')
+    resource = models.ManyToManyField('Resource', verbose_name='拥有资源', help_text='拥有资源')
 
     class Meta:
         verbose_name = '员工'

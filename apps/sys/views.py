@@ -38,7 +38,7 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
     传入token值,获取用户信息,传入错误token值或者传入token值对应的用户被删除时会返回HTTP404并返回相关错误信息
     """
     queryset = models.User.objects.all()
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.UserInfoSerializer
     permission_classes = ()
     parser_classes = (MultiPartParser, FileUploadParser,)
     schema = AutoSchema(manual_fields=[
@@ -92,11 +92,27 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
         }
         user = self.get_user(request)
         if isinstance(user, models.User):
-
-            serializer = serializers.UserSerializer(self.get_user(request), context=serializer_context)
+            user = self.get_user(request)
+            roles = user.role.all()
+            user.roles = roles
+            serializer = serializers.UserInfoSerializer(user, context=serializer_context)
             return Response(serializer.data)
         else:
             return Response(user, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_user(request)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
 
 class OrganizationViewSet(viewsets.ModelViewSet):
@@ -137,3 +153,17 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = serializers.GroupSerializer
+
+
+class RoleViewSet(viewsets.ModelViewSet):
+    """
+    角色
+    """
+    queryset = models.Role.objects.all()
+    serializer_class = serializers.RoleSerializer
+
+
+class ResourceViewSet(viewsets.ModelViewSet):
+    """资源"""
+    queryset = models.Resource.objects.all()
+    serializer_class = serializers.ResourceSerializer

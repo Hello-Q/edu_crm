@@ -14,15 +14,82 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = "__all__"
 
 
-class UserSerializer(DynamicFieldsMixin, serializers.HyperlinkedModelSerializer):
-    # 用户
-    # group_name = serializers.CharField(source='groups.values("name")')
-    # role = serializers.CharField(source='groups')
+class RoleSerializer(serializers.ModelSerializer):
+    """角色组"""
+    # resources = serializers.PrimaryKeyRelatedField(source='resource', many=True, queryset=models.Resource.objects.all())
+
+    class Meta:
+        model = models.Role
+        fields = '__all__'
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
+
+    roles = serializers.PrimaryKeyRelatedField(source='role', many=True, read_only=True)
+    roles_name = serializers.StringRelatedField(source='role', many=True, read_only=True)
+    department_name = serializers.StringRelatedField(source='department')
+    menus = serializers.SerializerMethodField()
+    buttons = serializers.SerializerMethodField()
+
+    def get_menus(self, ojb):
+        user = models.User.objects.get(pk=ojb.id)
+        roles = user.role.all()
+        # print(roles)
+        resource = models.Resource.objects.none()
+        for role in roles:
+            resource = resource | role.resource.filter(resource_type=1)
+        resource = user.resource.filter(resource_type=1) | resource
+        menu_list = []
+        for menu in resource.values():
+            menu_list.append(menu.get('resource_name'))
+        return menu_list
+
+    def get_buttons(self, ojb):
+        user = models.User.objects.get(pk=ojb.id)
+        roles = user.role.all()
+        # print(roles)
+        resource = models.Resource.objects.none()
+        for role in roles:
+            resource = resource | role.resource.filter(resource_type=2)
+        resource = user.resource.filter(resource_type=2) | resource
+        button_list = []
+        for menu in resource.values():
+            button_list.append(menu.get('resource_name'))
+        return button_list
+
+    def update(self, instance, validated_data):
+        raise_errors_on_nested_writes('update', self, validated_data)
+        info = model_meta.get_field_info(instance)
+
+        # Simply set each attribute on the instance, and then save it.
+        # Note that unlike `.create()` we don't need to treat many-to-many
+        # relationships as being a special case. During updates we already
+        # have an instance pk for the relationships to be associated with.
+        for attr, value in validated_data.items():
+            if attr in info.relations and info.relations[attr].to_many:
+                field = getattr(instance, attr)
+                field.set(value)
+
+            if attr == 'password':
+                instance.set_password(value)
+
+            else:
+                setattr(instance, attr, value)
+        instance.save()
+
+        return instance
 
     class Meta:
         model = models.User
-        # exclude = []
-        fields = ['id', 'url', 'username', 'nickname', 'head_pic', 'groups', 'dep', 'password']
+        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'menus', 'roles', 'roles_name', 'department_name', 'buttons']
+
+
+
+class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+
+    class Meta:
+        model = models.User
+        fields = ['id', 'username', 'nickname', 'head_pic', 'password']
 
     def create(self, validated_data):
         """
@@ -109,3 +176,8 @@ class PermissionSerializer(serializers.HyperlinkedModelSerializer):
         model = Permission
         fields = ["name", 'codename']
 
+class ResourceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Resource
+        fields = "__all__"
