@@ -61,6 +61,7 @@ class Role(BaseModel):
 class Resource(BaseModel):
     resource_id = models.AutoField(primary_key=True, verbose_name='资源编号', help_text='资源id')
     resource_name = models.CharField(max_length=15, verbose_name='资源名称', help_text='资源名称')
+    resource_key = models.CharField(max_length=25, verbose_name='资源key', unique=True)
     resource_type = models.IntegerField(choices=((1, '菜单权限'), (2, '按钮权限')), verbose_name='资源类型', help_text='资源类型')
 
     def __str__(self):

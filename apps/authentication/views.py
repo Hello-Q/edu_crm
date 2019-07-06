@@ -23,6 +23,7 @@ class LoginView(ObtainJSONWebToken):
     验证通过返回token进行登录
     """
 
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
@@ -44,18 +45,6 @@ class LoginView(ObtainJSONWebToken):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class LogoutView(generics.DestroyAPIView):
-    queryset = models.Token.objects.all()
-    serializer_class = serializers.TokenSerializer
-
-    def destroy(self, request, *args, **kwargs):
-        token = request.COOKIES.get('token')
-        token = models.Token.objects.get(token=token)
-        instance = token
-        self.perform_destroy(instance)
-        data = {'detail': "注销成功"}
-        return Response(data, status=status.HTTP_200_OK)
 
 
 class TokenVerify(VerifyJSONWebToken):
@@ -104,18 +93,18 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
             return msg
         # 顶一个空数组来接收token解析后的值
         try:
-            user_toke = jwt_decode_handler(token)
+            user_token = jwt_decode_handler(token)
         except exceptions.DecodeError as e:
             msg = {
                 'msg': 'token值解析异常,请检查token后重试, {}'.format(e)
             }
             return msg
         # 获得user_id
-        user_id = user_toke["user_id"]
+        user_id = user_token["user_id"]
+        print(user_id)
         # 通过user_id查询用户信息
         try:
-            user = self.get_queryset()
-            user = user.get(pk=user_id)
+            user = User.objects.get(pk=user_id)
         except User.DoesNotExist as e:
             msg = {
                 'msg': '未查询到用户,用户可能已被删除, {}'.format(e)
@@ -150,3 +139,17 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
+
+
+class LogoutView(generics.DestroyAPIView, PersonalInfo):
+    queryset = models.Token.objects.all()
+    serializer_class = serializers.TokenSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        user = self.get_user(request)
+        # 找出所有token
+        token = models.Token.objects.filter(user=user)
+        instance = token
+        self.perform_destroy(instance)
+        data = {'detail': "注销成功"}
+        return Response(data, status=status.HTTP_200_OK)

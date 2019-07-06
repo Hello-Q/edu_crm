@@ -17,6 +17,7 @@ from rest_framework import permissions
 from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, DjangoModelPermissions
 from utils.permission import ExpandDjangoModelPermissions
 
+
 class ChannelTypeViewSet(viewsets.ModelViewSet):
     """
     渠道分类
@@ -25,6 +26,7 @@ class ChannelTypeViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ChannelTypeSerializer
 
     permission_classes = (ExpandDjangoModelPermissions,)
+
 
 
 class ChannelViewSet(viewsets.ModelViewSet):
