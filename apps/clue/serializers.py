@@ -16,8 +16,8 @@ class ChannelSerializer(serializers.HyperlinkedModelSerializer):
         fields = "__all__"
 
 
-class ClueSerializer(serializers.HyperlinkedModelSerializer):
+class ClueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Clue
-        exclude = []
+        exclude = ['update_time', 'create_time', 'del_flag', 'creator',  'operator']

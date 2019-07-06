@@ -16,7 +16,7 @@ from apps.clue import filters
 from rest_framework import permissions
 from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, DjangoModelPermissions
 from utils.permission import ExpandDjangoModelPermissions
-
+from utils import views
 
 class ChannelTypeViewSet(viewsets.ModelViewSet):
     """
@@ -38,7 +38,7 @@ class ChannelViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
 
 
-class ClueViewSet(viewsets.ModelViewSet):
+class ClueViewSet(views.FalseDelModelViewSet):
     """
     线索资源
     """
