@@ -49,13 +49,13 @@ class LogoutView(generics.DestroyAPIView):
     queryset = models.Token.objects.all()
     serializer_class = serializers.TokenSerializer
 
-
     def destroy(self, request, *args, **kwargs):
         token = request.COOKIES.get('token')
         token = models.Token.objects.get(token=token)
         instance = token
         self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        data = {'detail': "注销成功"}
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class TokenVerify(VerifyJSONWebToken):
