@@ -19,7 +19,6 @@ class ChannelSerializer(serializers.HyperlinkedModelSerializer):
 class ClueSerializer(serializers.ModelSerializer):
     channel_name = serializers.StringRelatedField(source='channel')
     follow_up_person_name = serializers.StringRelatedField(source='follow_up_person')
-    auxiliary_status_name = serializers.StringRelatedField(source='auxiliary_status')
     intended_course_name = serializers.StringRelatedField(source='intended_course')
     intended_school_name = serializers.StringRelatedField(source='intended_school')
     plan_school_name = serializers.StringRelatedField(source='plan_school')
