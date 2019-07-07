@@ -17,4 +17,4 @@ class SubjectsViewSet(viewsets.ModelViewSet):
 
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = models.Teacher.objects.all()
-    serializer_class = serializers.CourseSerializer
+    serializer_class = serializers.TeacherSerializer

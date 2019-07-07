@@ -84,3 +84,6 @@ class User(AbstractUser, BaseModel):
         verbose_name = '员工'
         verbose_name_plural = '员工管理'
 
+    def __str__(self):
+        return self.nickname
+

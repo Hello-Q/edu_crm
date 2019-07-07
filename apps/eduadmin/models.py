@@ -43,7 +43,7 @@ class Teacher(models.Model):
                              on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
-        return self.user
+        return self.user.nickname
 
     class Meta:
         verbose_name = '教师'

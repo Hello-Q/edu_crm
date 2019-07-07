@@ -16,4 +16,4 @@ class SubjectsAdmin(admin.ModelAdmin):
 
 @admin.register(models.Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ['tea_id', 'user_id']
+    list_display = ['tea_id', 'user']

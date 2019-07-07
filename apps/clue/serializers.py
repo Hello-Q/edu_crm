@@ -27,7 +27,6 @@ class ClueSerializer(serializers.ModelSerializer):
     plan_teacher_name = serializers.StringRelatedField(source='plan_teacher')
     plan_course_name = serializers.StringRelatedField(source='plan_course')
 
-
     class Meta:
         model = models.Clue
         exclude = ['update_time', 'create_time', 'del_flag', 'creator',  'operator']
