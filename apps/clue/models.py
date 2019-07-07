@@ -66,6 +66,7 @@ class Clue(BaseModel):
     sex = models.IntegerField(choices=((0, '女'), (1, '男'),), null=True, blank=True,
                               verbose_name='性别', help_text='{}'.format(SEX))
     add = models.CharField(max_length=40, verbose_name='地址', help_text='地址', null=True, blank=True)
+    input_time = models.DateField('录入日期', auto_now_add=True, help_text='录入日期')
     intended_course = models.ForeignKey('eduadmin.Course', related_name='clue_intended_course', verbose_name='意向课程', help_text='意向课程', on_delete=models.DO_NOTHING, null=True, blank=True)
     intended_school = models.ForeignKey('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', on_delete=models.DO_NOTHING, null=True, blank=True)
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
