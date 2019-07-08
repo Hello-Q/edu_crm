@@ -40,6 +40,7 @@ class Channel(BaseModel):
     class Meta:
         verbose_name = '渠道'
         verbose_name_plural = '渠道管理'
+        ordering = ['channel_id']
 
 
 class Clue(BaseModel):

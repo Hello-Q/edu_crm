@@ -28,7 +28,6 @@ class ChannelTypeViewSet(viewsets.ModelViewSet):
     permission_classes = (ExpandDjangoModelPermissions,)
 
 
-
 class ChannelViewSet(viewsets.ModelViewSet):
     """
     渠道类型
@@ -36,7 +35,7 @@ class ChannelViewSet(viewsets.ModelViewSet):
     queryset = models.Channel.objects.all()
     serializer_class = serializers.ChannelSerializer
     filter_backends = (DjangoFilterBackend,)
-
+    filterset_fields = ('channel_type', )
 
 class ClueViewSet(views.FalseDelModelViewSet):
     """
