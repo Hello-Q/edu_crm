@@ -46,7 +46,7 @@ class ClueSerializer(serializers.ModelSerializer):
     channel_info = BaseChannelSerializer(source='channel', read_only=True)
     # follow_up_person_name = serializers.StringRelatedField(source='follow_up_person')
     intended_course_info = eduadmin_serializers.CourseSerializer(source='intended_course', read_only=True, many=True)
-    intended_school_info = sys_serializers.DepartmentSerializer(source='intended_school', read_only=True, many=True)
+    intended_school_info = sys_serializers.DepartmentBaseSerializer(source='intended_school', read_only=True, many=True)
     # plan_school_name = serializers.StringRelatedField(source='plan_school')
     # plan_reception_name = serializers.StringRelatedField(source='plan_reception')
     # plan_teacher_name = serializers.StringRelatedField(source='plan_teacher')
@@ -59,4 +59,4 @@ class ClueSerializer(serializers.ModelSerializer):
         # exclude = HIDE_FIELD
 
         fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'input_time',
-                  'intended_course', 'intended_course_info', 'intended_school', ]
+                  'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info']

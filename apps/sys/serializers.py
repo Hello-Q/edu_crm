@@ -174,7 +174,7 @@ class DepartmentBaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Department
-        fields = ["dep_id", 'dep_name']
+        fields = ["id", 'name', 'tel']
 
 
 class PermissionSerializer(serializers.ModelSerializer):
