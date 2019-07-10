@@ -14,7 +14,7 @@ class ChannelTypeAdmin(admin.ModelAdmin):
     """
     注册渠道类型管理
     """
-    list_display = ['channel_type_id', 'cha_type_name', 'del_flag']
+    list_display = ['id', 'name', 'del_flag']
 
     # def get_model_perms
     # def get_readonly_fields(self, request, obj=None):

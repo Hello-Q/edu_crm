@@ -7,15 +7,15 @@ from utils.base_modle import BaseModel
 
 
 class ChannelType(BaseModel):
-    channel_type_id = models.AutoField(primary_key=True, verbose_name='渠道分类编号', help_text='渠道分类id')
-    cha_type_name = models.CharField(max_length=10, unique=True, verbose_name='渠道分类名称', help_text='渠道分类名称')
+    id = models.AutoField(primary_key=True, verbose_name='渠道分类编号', help_text='渠道分类id')
+    name = models.CharField(max_length=10, unique=True, verbose_name='渠道分类名称', help_text='渠道分类名称')
     creator = models.ForeignKey('sys.User', related_name='ChannelType_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='ChannelType_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
 
     del_flag = models.BooleanField('删除标记', default=False)
 
     def __str__(self):
-        return self.cha_type_name
+        return self.name
 
 
     class Meta:
@@ -60,15 +60,15 @@ class Clue(BaseModel):
         (0, '女'),
         (1, '男'),
     )
-    clue_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     channel = models.ForeignKey('clue.Channel', on_delete=models.DO_NOTHING, verbose_name='来源渠道', help_text='来源渠道')
     name = models.CharField(max_length=10, verbose_name='姓名', help_text='姓名')
     tel = models.CharField(max_length=15, verbose_name='电话', help_text='电话')
     age = models.IntegerField(verbose_name='年龄', help_text='年龄', null=True, blank=True)
     sex = models.IntegerField(choices=((0, '女'), (1, '男'),), null=True, blank=True,
                               verbose_name='性别', help_text='{}'.format(SEX))
-    add = models.CharField(max_length=40, verbose_name='地址', help_text='地址', null=True, blank=True)
-    input_time = models.DateField('录入日期', auto_now_add=True, help_text='录入日期')
+    address = models.CharField(max_length=40, verbose_name='地址', help_text='地址', null=True, blank=True)
+    input_time = models.DateField('录入日期', auto_now_add=True, help_text='录入日期',)
     intended_course = models.ManyToManyField('eduadmin.Course', related_name='clue_intended_course', verbose_name='意向课程', help_text='意向课程',  blank=True)
     intended_school = models.ManyToManyField('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', blank=True)
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)

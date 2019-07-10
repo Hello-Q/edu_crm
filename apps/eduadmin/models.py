@@ -24,13 +24,13 @@ class Subjects(models.Model):
 
 
 class Course(models.Model):
-    cou_id = models.AutoField(primary_key=True)
-    cou_type = models.IntegerField('课程类型', choices=((0, '一对一'), (1, '班课')))
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=15, verbose_name='课程名称', help_text='课程名称')
+    type = models.IntegerField('课程类型', choices=((0, '一对一'), (1, '班课')))
     subjects = models.ForeignKey('eduadmin.Subjects', verbose_name='科系', on_delete=models.DO_NOTHING)
-    cou_name = models.CharField(max_length=15, verbose_name='课程名称', help_text='课程名称')
 
     def __str__(self):
-        return self.cou_name
+        return self.name
 
     class Meta:
         verbose_name = '课程'

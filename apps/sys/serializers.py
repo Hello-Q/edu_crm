@@ -156,28 +156,28 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         return instance
 
 
-class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
+class OrganizationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Organization
         fields = "__all__"
 
 
-class DepartmentSerializer(serializers.HyperlinkedModelSerializer):
+class DepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Department
         fields = "__all__"
 
 
-class DepartmentBaseSerializer(serializers.HyperlinkedModelSerializer):
+class DepartmentBaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Department
         fields = ["dep_id", 'dep_name']
 
 
-class PermissionSerializer(serializers.HyperlinkedModelSerializer):
+class PermissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Permission

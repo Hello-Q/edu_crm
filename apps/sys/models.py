@@ -25,20 +25,19 @@ class Organization(BaseModel):
 
 
 class Department(BaseModel):
-    dep_id = models.AutoField(primary_key=True, verbose_name='部门编号', help_text='部门id')
-    org = models.ForeignKey('sys.Organization', on_delete=models.DO_NOTHING,
-                            verbose_name='公司名称', help_text='公司id')
-    dep_type = models.IntegerField('类型', choices=((0, '分公司'), (1, '校区'), (2, '部门'), ), null=True)
+    id = models.AutoField(primary_key=True, verbose_name='部门编号', help_text='部门id')
+    name = models.CharField(max_length=10, verbose_name='部门名称', help_text='部门名称')
+    tel = models.CharField(max_length=15, verbose_name='电话', help_text='电话', null=True)
+    type = models.IntegerField('类型', choices=((0, '分公司'), (1, '校区'), (2, '部门'), ), null=True)
     superior = models.ForeignKey('sys.Department', verbose_name='上级部门', on_delete=models.DO_NOTHING,
                                  null=True, blank=True)
-    dep_name = models.CharField(max_length=10, verbose_name='部门名称', help_text='部门名称')
-    dep_tel = models.CharField(max_length=15, verbose_name='电话', help_text='电话', null=True)
-
+    organization = models.ForeignKey('sys.Organization', on_delete=models.DO_NOTHING,
+                            verbose_name='公司名称', help_text='公司id')
     creator = models.ForeignKey('sys.User', related_name='department_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='department_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
 
     def __str__(self):
-        return self.dep_name
+        return self.name
 
     class Meta:
         verbose_name = '部门'
