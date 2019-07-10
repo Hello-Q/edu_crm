@@ -40,7 +40,6 @@ class StrVisitSerializer(serializers.ModelSerializer):
     ordered_teacher_name = serializers.StringRelatedField(source='ordered_teacher', read_only=True)
     ordered_course_name = serializers.StringRelatedField(source='ordered_course', read_only=True)
 
-    
     class Meta:
         model = models.Visit
         fields = ['id', 'type', 'date', 'time', 'school_name', 'ordered_reception_name', 'ordered_teacher_name',
