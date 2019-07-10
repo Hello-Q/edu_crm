@@ -73,6 +73,7 @@ class Clue(BaseModel):
     intended_school = models.ManyToManyField('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', blank=True)
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), choices=STATUS, null=True, blank=True,)
+
     # auxiliary_status = models.IntegerField('辅助状态', choices=AUXILIARY_STATUS, help_text='{}'.format(AUXILIARY_STATUS), null=True, blank=True)
     # plan_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
     # plan_time = models.TimeField('安排时间', help_text='安排时间', null=True, blank=True)
@@ -98,11 +99,11 @@ class Visit(BaseModel):
         (1, '试听'),
     )
 
-    visit_id = models.AutoField(primary_key=True, )
-    visit_type = models.IntegerField('访问类型', help_text='访问类型{}'.format(VISIT_TYPE), choices=VISIT_TYPE)
-    visit_date = models.DateField('安排日期', help_text='安排日期')
-    visit_time = models.TimeField('安排时间', help_text='安排时间')
-    visit_school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True)
+    id = models.AutoField(primary_key=True, )
+    type = models.IntegerField('访问类型', help_text='访问类型{}'.format(VISIT_TYPE), choices=VISIT_TYPE)
+    date = models.DateField('日期', help_text='安排日期')
+    time = models.TimeField('时间', help_text='安排时间')
+    school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True)
     ordered_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.CASCADE)
     ordered_teacher = models.ForeignKey('eduadmin.Teacher', related_name='clue_plan_teacher', verbose_name='安排老师', help_text='安排校区', on_delete=models.CASCADE, null=True, blank=True)
     ordered_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.CASCADE, null=True, blank=True)

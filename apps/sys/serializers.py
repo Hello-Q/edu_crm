@@ -84,7 +84,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'menus', 'roles', 'roles_name', 'department_name', 'buttons']
 
 
-
 class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
@@ -154,6 +153,13 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
                 field.set(value)
 
         return instance
+
+
+class BaseUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ['id', 'nickname', 'tel']
+
 
 
 class OrganizationSerializer(serializers.ModelSerializer):

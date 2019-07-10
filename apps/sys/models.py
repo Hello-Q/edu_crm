@@ -73,6 +73,7 @@ class Resource(BaseModel):
 
 class User(AbstractUser, BaseModel):
     age = models.IntegerField(verbose_name="年龄", default="1")
+    tel = models.IntegerField('员工电话')
     department = models.ForeignKey('sys.Department', verbose_name='所属部门', help_text='部门id', null=True, blank=True, on_delete=models.DO_NOTHING)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')

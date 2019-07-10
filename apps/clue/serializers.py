@@ -34,29 +34,36 @@ class BaseChannelSerializer(serializers.ModelSerializer):
         fields = ['channel_id', 'channel_name', 'channel_type', 'channel_type_info']
 
 
-class VisitSerializer(serializers.ModelSerializer):
-    visit_school = sys_serializers.DepartmentBaseSerializer()
+class StrVisitSerializer(serializers.ModelSerializer):
+    school_name = serializers.StringRelatedField(source='school', read_only=True)
+    ordered_reception_name = serializers.StringRelatedField(source='ordered_reception', read_only=True)
+    ordered_teacher_name = serializers.StringRelatedField(source='ordered_teacher', read_only=True)
+    ordered_course_name = serializers.StringRelatedField(source='ordered_course', read_only=True)
 
+    
     class Meta:
         model = models.Visit
-        exclude = HIDE_FIELD
+        fields = ['id', 'type', 'date', 'time', 'school_name', 'ordered_reception_name', 'ordered_teacher_name',
+                  'ordered_course', 'ordered_course_name', 'is_visit', 'remark']
 
 
 class ClueSerializer(serializers.ModelSerializer):
     channel_info = BaseChannelSerializer(source='channel', read_only=True)
-    # follow_up_person_name = serializers.StringRelatedField(source='follow_up_person')
     intended_course_info = eduadmin_serializers.CourseSerializer(source='intended_course', read_only=True, many=True)
     intended_school_info = sys_serializers.DepartmentBaseSerializer(source='intended_school', read_only=True, many=True)
+    follow_up_person_info = sys_serializers.BaseUserSerializer(source='follow_up_person', read_only=True)
     # plan_school_name = serializers.StringRelatedField(source='plan_school')
     # plan_reception_name = serializers.StringRelatedField(source='plan_reception')
     # plan_teacher_name = serializers.StringRelatedField(source='plan_teacher')
     # plan_course_name = serializers.StringRelatedField(source='plan_course')
-    # Visit = VisitSerializer(source='visit_set', many=True, read_only=True)
-
+    Visit = StrVisitSerializer(source='visit_set', many=True, read_only=True)
 
     class Meta:
         model = models.Clue
         # exclude = HIDE_FIELD
 
         fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'input_time',
-                  'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info']
+                  'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info',
+                  'follow_up_person', 'follow_up_person_info', 'Visit']
+
+    # def update(self, instance, validated_data):

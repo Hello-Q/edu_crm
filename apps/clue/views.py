@@ -37,6 +37,7 @@ class ChannelViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('channel_type', )
 
+
 class ClueViewSet(views.FalseDelModelViewSet):
     """
     线索资源
