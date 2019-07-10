@@ -72,13 +72,13 @@ class Clue(BaseModel):
     intended_school = models.ManyToManyField('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', blank=True)
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), choices=STATUS, null=True, blank=True,)
-    auxiliary_status = models.IntegerField('辅助状态', choices=AUXILIARY_STATUS, help_text='{}'.format(AUXILIARY_STATUS), null=True, blank=True)
-    plan_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
-    plan_time = models.TimeField('安排时间', help_text='安排时间', null=True, blank=True)
-    plan_school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True, null=True, blank=True)
-    plan_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.DO_NOTHING, null=True, blank=True)
-    plan_teacher = models.ForeignKey('eduadmin.Teacher', related_name='clue_plan_teacher', verbose_name='安排老师', help_text='安排校区', on_delete=models.DO_NOTHING, null=True, blank=True)
-    plan_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.DO_NOTHING, null=True, blank=True)
+    # auxiliary_status = models.IntegerField('辅助状态', choices=AUXILIARY_STATUS, help_text='{}'.format(AUXILIARY_STATUS), null=True, blank=True)
+    # plan_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
+    # plan_time = models.TimeField('安排时间', help_text='安排时间', null=True, blank=True)
+    # plan_school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True, null=True, blank=True)
+    # plan_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.DO_NOTHING, null=True, blank=True)
+    # plan_teacher = models.ForeignKey('eduadmin.Teacher', related_name='clue_plan_teacher', verbose_name='安排老师', help_text='安排校区', on_delete=models.DO_NOTHING, null=True, blank=True)
+    # plan_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.DO_NOTHING, null=True, blank=True)
     creator = models.ForeignKey('sys.User', related_name='clue_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='clue_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
 
@@ -88,3 +88,25 @@ class Clue(BaseModel):
     class Meta:
         verbose_name = '线索'
         verbose_name_plural = '线索管理'
+
+
+class Visit(BaseModel):
+
+    VISIT_TYPE = (
+        (0, '约访'),
+        (1, '试听'),
+    )
+
+
+    visit_id = models.AutoField(primary_key=True, )
+    visit_type = models.IntegerField('访问类型', help_text='访问类型{}'.format(VISIT_TYPE), choices=VISIT_TYPE)
+    visit_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
+    visit_time = models.TimeField('安排时间', help_text='安排时间', null=True, blank=True)
+    visit_school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True, null=True, blank=True)
+    ordered_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.CASCADE, null=True, blank=True)
+    ordered_teacher = models.ForeignKey('eduadmin.Teacher', related_name='clue_plan_teacher', verbose_name='安排老师', help_text='安排校区', on_delete=models.CASCADE, null=True, blank=True)
+    ordered_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.CASCADE, null=True, blank=True)
+    clue = models.ForeignKey('clue.Clue', verbose_name='线索', on_delete=models.CASCADE)
+    is_visit= models.BooleanField('访问状态', )
+    creator = models.ForeignKey('sys.User', related_name='visit_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
+    operator = models.ForeignKey('sys.User', related_name='visit_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)

@@ -172,3 +172,6 @@ MEDIA_URL = '/media/'
 # 配置静态文件地址
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
+
+
+HIDE_FIELD = ['update_time', 'create_time', 'del_flag', 'creator',  'operator']
