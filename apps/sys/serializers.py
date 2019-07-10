@@ -170,11 +170,19 @@ class DepartmentSerializer(serializers.HyperlinkedModelSerializer):
         fields = "__all__"
 
 
+class DepartmentBaseSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = models.Department
+        fields = ["dep_id", 'dep_name']
+
+
 class PermissionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Permission
         fields = ["name", 'codename']
+
 
 class ResourceSerializer(serializers.ModelSerializer):
 

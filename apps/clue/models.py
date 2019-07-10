@@ -9,13 +9,14 @@ from utils.base_modle import BaseModel
 class ChannelType(BaseModel):
     channel_type_id = models.AutoField(primary_key=True, verbose_name='渠道分类编号', help_text='渠道分类id')
     cha_type_name = models.CharField(max_length=10, unique=True, verbose_name='渠道分类名称', help_text='渠道分类名称')
+    creator = models.ForeignKey('sys.User', related_name='ChannelType_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
+    operator = models.ForeignKey('sys.User', related_name='ChannelType_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
+
     del_flag = models.BooleanField('删除标记', default=False)
 
     def __str__(self):
         return self.cha_type_name
 
-    def __all__(self):
-        return [self.channel_type_id, self.cha_type_name, self.del_flag]
 
     class Meta:
         verbose_name = '渠道类型'
@@ -27,7 +28,7 @@ class ChannelType(BaseModel):
 
 class Channel(BaseModel):
     channel_id = models.AutoField(primary_key=True)
-    cha_name = models.CharField(max_length=10, verbose_name='渠道名称', unique=True,
+    channel_name = models.CharField(max_length=10, verbose_name='渠道名称', unique=True,
                                 help_text='渠道名称')
     channel_type = models.ForeignKey('clue.ChannelType', on_delete=models.SET_NULL,
                                         null=True, verbose_name='渠道分类',
@@ -35,7 +36,7 @@ class Channel(BaseModel):
     del_flag = models.BooleanField('删除标记', default=False)
 
     def __str__(self):
-        return self.cha_name
+        return self.channel_name
 
     class Meta:
         verbose_name = '渠道'
@@ -97,16 +98,15 @@ class Visit(BaseModel):
         (1, '试听'),
     )
 
-
     visit_id = models.AutoField(primary_key=True, )
     visit_type = models.IntegerField('访问类型', help_text='访问类型{}'.format(VISIT_TYPE), choices=VISIT_TYPE)
-    visit_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
-    visit_time = models.TimeField('安排时间', help_text='安排时间', null=True, blank=True)
-    visit_school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True, null=True, blank=True)
-    ordered_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.CASCADE, null=True, blank=True)
+    visit_date = models.DateField('安排日期', help_text='安排日期')
+    visit_time = models.TimeField('安排时间', help_text='安排时间')
+    visit_school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True)
+    ordered_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.CASCADE)
     ordered_teacher = models.ForeignKey('eduadmin.Teacher', related_name='clue_plan_teacher', verbose_name='安排老师', help_text='安排校区', on_delete=models.CASCADE, null=True, blank=True)
     ordered_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.CASCADE, null=True, blank=True)
     clue = models.ForeignKey('clue.Clue', verbose_name='线索', on_delete=models.CASCADE)
-    is_visit= models.BooleanField('访问状态', )
-    creator = models.ForeignKey('sys.User', related_name='visit_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
-    operator = models.ForeignKey('sys.User', related_name='visit_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
+    is_visit = models.BooleanField('访问状态', )
+    creator = models.ForeignKey('sys.User', related_name='visit_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
+    operator = models.ForeignKey('sys.User', related_name='visit_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')

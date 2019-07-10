@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from apps.clue import models
 from edu_crm.settings import HIDE_FIELD
+from apps.sys.serializers import DepartmentBaseSerializer
+
 
 class ChannelTypeSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -9,14 +11,22 @@ class ChannelTypeSerializer(serializers.HyperlinkedModelSerializer):
         fields = "__all__"
 
 
-class ChannelSerializer(serializers.HyperlinkedModelSerializer):
+class ChannelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Channel
-        fields = "__all__"
+        exclude = HIDE_FIELD
+
+
+class BaseChannelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Channel
+        fields = ['channel_id', 'channel_name']
 
 
 class VisitSerializer(serializers.ModelSerializer):
+    visit_school = DepartmentBaseSerializer()
 
     class Meta:
         model = models.Visit
@@ -24,7 +34,7 @@ class VisitSerializer(serializers.ModelSerializer):
 
 
 class ClueSerializer(serializers.ModelSerializer):
-    channel_name = serializers.StringRelatedField(source='channel')
+    channel = BaseChannelSerializer()
     follow_up_person_name = serializers.StringRelatedField(source='follow_up_person')
     intended_course_name = serializers.StringRelatedField(source='intended_course', read_only=True, many=True)
     intended_school_name = serializers.StringRelatedField(source='intended_school', read_only=True, many=True)
@@ -33,7 +43,6 @@ class ClueSerializer(serializers.ModelSerializer):
     plan_teacher_name = serializers.StringRelatedField(source='plan_teacher')
     plan_course_name = serializers.StringRelatedField(source='plan_course')
     Visit = VisitSerializer(source='visit_set', many=True)
-
 
 
     class Meta:

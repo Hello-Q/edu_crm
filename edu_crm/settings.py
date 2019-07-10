@@ -174,4 +174,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
 
 
-HIDE_FIELD = ['update_time', 'create_time', 'del_flag', 'creator',  'operator']
+HIDE_FIELD = ['update_time', 'create_time', 'del_flag']
