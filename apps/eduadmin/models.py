@@ -43,7 +43,7 @@ class Course(models.Model):
 
 
 class Teacher(models.Model):
-    tea_id = models.AutoField(primary_key=True, verbose_name='教师编号', help_text='教师id')
+    id = models.AutoField(primary_key=True, verbose_name='教师编号', help_text='教师id')
     user = models.ForeignKey('sys.User', verbose_name='教师姓名', help_text='员工id',
                              on_delete=models.DO_NOTHING, null=True, blank=True)
 

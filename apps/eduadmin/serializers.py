@@ -23,3 +23,10 @@ class TeacherSerializer(serializers.ModelSerializer):
         model = models.Teacher
         fields = "__all__"
 
+
+class BaseTeacherSerializer(serializers.ModelSerializer):
+    nickname = serializers.StringRelatedField(source='user')
+
+    class Meta:
+        model = models.Teacher
+        fields = ['id', 'nickname']

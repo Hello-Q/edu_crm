@@ -6,6 +6,7 @@ router = DefaultRouter()
 router.register('course', views.CourseViewSet)
 router.register('subjects', views.SubjectsViewSet)
 router.register('teacher', views.TeacherViewSet)
+# router.register('base-teacher', views.BaseTeacher)
 
 
 urlpatterns = [

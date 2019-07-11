@@ -28,7 +28,7 @@ class ChannelSerializer(serializers.ModelSerializer):
 
 class BaseChannelSerializer(serializers.ModelSerializer):
     """基础渠道"""
-    type_info = BaseChannelTypeSerializer(source='channel_type', read_only=True)
+    type_info = BaseChannelTypeSerializer(source='type')
 
     class Meta:
         model = models.Channel
@@ -56,14 +56,16 @@ class ClueSerializer(serializers.ModelSerializer):
     # plan_reception_name = serializers.StringRelatedField(source='plan_reception')
     # plan_teacher_name = serializers.StringRelatedField(source='plan_teacher')
     # plan_course_name = serializers.StringRelatedField(source='plan_course')
+    creator = serializers.StringRelatedField()
     Visit = StrVisitSerializer(source='visit_set', many=True, read_only=True)
+
 
     class Meta:
         model = models.Clue
         # exclude = HIDE_FIELD
 
-        fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'input_time',
+        fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'consult_date',
                   'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info',
-                      'follow_up_person', 'follow_up_person_info', 'Visit', 'remark']
+                      'follow_up_person', 'follow_up_person_info', 'creator', 'Visit', 'remark']
 
     # def update(self, instance, validated_data):
