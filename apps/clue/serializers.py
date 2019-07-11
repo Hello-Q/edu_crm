@@ -48,10 +48,12 @@ class StrVisitSerializer(serializers.ModelSerializer):
 
 
 class FollowRecordSerializer(serializers.ModelSerializer):
-
+    creator_name = serializers.StringRelatedField(source='creator', read_only=True)
+    
     class Meta:
         model = models.FollowRecord
-        fields = ['id', 'datetime', 'content', 'creator']
+        fields = ['id', 'datetime', 'content', 'creator', 'creator_name']
+
 
 class ClueSerializer(serializers.ModelSerializer):
     channel_info = BaseChannelSerializer(source='channel', read_only=True)
