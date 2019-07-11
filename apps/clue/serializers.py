@@ -63,6 +63,6 @@ class ClueSerializer(serializers.ModelSerializer):
 
         fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'input_time',
                   'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info',
-                  'follow_up_person', 'follow_up_person_info', 'Visit']
+                  'follow_up_person', 'follow_up_person_info', 'Visit', 'remark']
 
     # def update(self, instance, validated_data):
