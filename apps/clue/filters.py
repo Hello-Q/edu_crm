@@ -6,4 +6,4 @@ class SourceChannelFilter(filters.FilterSet):
 
     class Meta:
         model = models.Channel
-        fields = ['channel_name']
+        fields = ['name']

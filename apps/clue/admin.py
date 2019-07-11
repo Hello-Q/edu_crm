@@ -29,7 +29,7 @@ class ChannelAdmin(admin.ModelAdmin):
     """
     注册渠道管理
     """
-    list_display = ['channel_id', 'channel_type_id', 'del_flag']
+    list_display = ['id', 'id', 'del_flag']
 
 
 @admin.register(models.Clue)
