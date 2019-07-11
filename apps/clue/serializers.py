@@ -52,7 +52,7 @@ class FollowRecordSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.FollowRecord
-        fields = ['id', 'datetime', 'content', 'creator', 'creator_name']
+        fields = ['id', 'datetime', 'clue', 'content', 'creator_name']
 
 
 class ClueSerializer(serializers.ModelSerializer):
