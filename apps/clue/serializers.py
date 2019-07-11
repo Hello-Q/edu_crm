@@ -47,6 +47,12 @@ class StrVisitSerializer(serializers.ModelSerializer):
                   'ordered_course', 'ordered_course_name', 'is_visit', 'remark']
 
 
+class FollowRecordSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.FollowRecord
+        fields = ['id', 'datetime', 'content', 'creator']
+
 class ClueSerializer(serializers.ModelSerializer):
     channel_info = BaseChannelSerializer(source='channel', read_only=True)
     intended_course_info = eduadmin_serializers.CourseSerializer(source='intended_course', read_only=True, many=True)
@@ -56,9 +62,9 @@ class ClueSerializer(serializers.ModelSerializer):
     # plan_reception_name = serializers.StringRelatedField(source='plan_reception')
     # plan_teacher_name = serializers.StringRelatedField(source='plan_teacher')
     # plan_course_name = serializers.StringRelatedField(source='plan_course')
-    creator = serializers.StringRelatedField()
+    creator = serializers.StringRelatedField(read_only=True)
     Visit = StrVisitSerializer(source='visit_set', many=True, read_only=True)
-
+    follow_info = FollowRecordSerializer(source='followrecord_set', many=True, read_only=True)
 
     class Meta:
         model = models.Clue
@@ -66,6 +72,6 @@ class ClueSerializer(serializers.ModelSerializer):
 
         fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'consult_date',
                   'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info',
-                      'follow_up_person', 'follow_up_person_info', 'creator', 'Visit', 'remark']
+                      'follow_up_person', 'follow_up_person_info', 'creator', 'Visit', 'follow_info', 'remark']
 
-    # def update(self, instance, validated_data):
+

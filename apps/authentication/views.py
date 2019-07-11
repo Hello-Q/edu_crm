@@ -146,10 +146,18 @@ class LogoutView(generics.DestroyAPIView, PersonalInfo):
     serializer_class = serializers.TokenSerializer
 
     def destroy(self, request, *args, **kwargs):
+        print(1, request.user)
         user = self.get_user(request)
+        print(2, user)
         # 找出所有token
         token = models.Token.objects.filter(user=user)
         instance = token
         self.perform_destroy(instance)
         data = {'detail': "注销成功"}
         return Response(data, status=status.HTTP_200_OK)
+
+
+class TestView(generics.ListCreateAPIView):
+
+    queryset = models.Token.objects.all()
+    serializer_class = serializers.TokenSerializer
