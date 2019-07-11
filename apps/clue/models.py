@@ -11,12 +11,10 @@ class ChannelType(BaseModel):
     name = models.CharField(max_length=10, unique=True, verbose_name='渠道分类名称', help_text='渠道分类名称')
     creator = models.ForeignKey('sys.User', related_name='ChannelType_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='ChannelType_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
-
     del_flag = models.BooleanField('删除标记', default=False)
 
     def __str__(self):
         return self.name
-
 
     class Meta:
         verbose_name = '渠道类型'
@@ -28,11 +26,8 @@ class ChannelType(BaseModel):
 
 class Channel(BaseModel):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=10, verbose_name='渠道名称', unique=True,
-                                help_text='渠道名称')
-    type = models.ForeignKey('clue.ChannelType', on_delete=models.SET_NULL,
-                                        null=True, verbose_name='渠道分类',
-                                        help_text='渠道分类id')
+    name = models.CharField(max_length=10, verbose_name='渠道名称', unique=True, help_text='渠道名称')
+    type = models.ForeignKey('clue.ChannelType', on_delete=models.CASCADE, verbose_name='渠道分类', help_text='渠道分类id')
     del_flag = models.BooleanField('删除标记', default=False)
 
     def __str__(self):

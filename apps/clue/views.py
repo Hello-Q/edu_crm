@@ -18,13 +18,14 @@ from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, Dja
 from utils.permission import ExpandDjangoModelPermissions
 from utils import views
 
+
 class ChannelTypeViewSet(viewsets.ModelViewSet):
     """
     渠道分类
     """
     queryset = models.ChannelType.objects.all()
     serializer_class = serializers.ChannelTypeSerializer
-
+    pagination_class = None
     permission_classes = (ExpandDjangoModelPermissions,)
 
 
@@ -35,7 +36,8 @@ class ChannelViewSet(viewsets.ModelViewSet):
     queryset = models.Channel.objects.all()
     serializer_class = serializers.ChannelSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('channel_type', )
+    pagination_class = None
+    filterset_fields = ('type',)
 
 
 class ClueViewSet(views.FalseDelModelViewSet):

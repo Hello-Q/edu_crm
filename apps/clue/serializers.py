@@ -6,27 +6,28 @@ from apps.eduadmin import serializers as eduadmin_serializers
 
 
 class ChannelTypeSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = models.ChannelType
-        fields = "__all__"
-
-
-class BaseChannelTypeSerializer(serializers.ModelSerializer):
-
+    """渠道类型"""
     class Meta:
         model = models.ChannelType
         fields = ['id', 'name']
 
 
-class ChannelSerializer(serializers.ModelSerializer):
+class BaseChannelTypeSerializer(serializers.ModelSerializer):
+    """基础渠道类型"""
+    class Meta:
+        model = models.ChannelType
+        fields = ['id', 'name',  'remark']
 
+
+class ChannelSerializer(serializers.ModelSerializer):
+    """渠道"""
     class Meta:
         model = models.Channel
-        exclude = HIDE_FIELD
+        fields = ['id', 'name', 'type', 'remark']
 
 
 class BaseChannelSerializer(serializers.ModelSerializer):
+    """基础渠道"""
     type_info = BaseChannelTypeSerializer(source='channel_type', read_only=True)
 
     class Meta:
