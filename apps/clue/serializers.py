@@ -27,11 +27,11 @@ class ChannelSerializer(serializers.ModelSerializer):
 
 
 class BaseChannelSerializer(serializers.ModelSerializer):
-    channel_type_info = BaseChannelTypeSerializer(source='channel_type', read_only=True)
+    type_info = BaseChannelTypeSerializer(source='channel_type', read_only=True)
 
     class Meta:
         model = models.Channel
-        fields = ['channel_id', 'channel_name', 'channel_type', 'channel_type_info']
+        fields = ['id', 'name', 'type', 'type_info']
 
 
 class StrVisitSerializer(serializers.ModelSerializer):
@@ -63,6 +63,6 @@ class ClueSerializer(serializers.ModelSerializer):
 
         fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'input_time',
                   'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info',
-                  'follow_up_person', 'follow_up_person_info', 'Visit', 'remark']
+                      'follow_up_person', 'follow_up_person_info', 'Visit', 'remark']
 
     # def update(self, instance, validated_data):
