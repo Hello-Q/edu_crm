@@ -68,7 +68,7 @@ class Clue(BaseModel):
     intended_school = models.ManyToManyField('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', blank=True)
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), choices=STATUS, null=True, blank=True,)
-    next_time = models.DateTimeField('下次联系时间', help_text='下次联系时间')
+    next_time = models.DateTimeField('下次联系时间', help_text='下次联系时间', null=True, blank=True)
     # auxiliary_status = models.IntegerField('辅助状态', choices=AUXILIARY_STATUS, help_text='{}'.format(AUXILIARY_STATUS), null=True, blank=True)
     # plan_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
     # plan_time = models.TimeField('安排时间', help_text='安排时间', null=True, blank=True)
