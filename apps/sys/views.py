@@ -30,6 +30,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DepartmentSerializer
 
 
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     对系统用户进行数据操作
