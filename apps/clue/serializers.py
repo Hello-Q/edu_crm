@@ -68,6 +68,7 @@ class ClueSerializer(serializers.ModelSerializer):
     creator = serializers.StringRelatedField(read_only=True)
     Visit = StrVisitSerializer(source='visit_set', many=True, read_only=True)
     follow_info = FollowRecordSerializer(source='followrecord_set', many=True, read_only=True)
+    next_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S",)
 
     class Meta:
         model = models.Clue
