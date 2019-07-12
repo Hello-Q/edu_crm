@@ -41,11 +41,12 @@ class Channel(BaseModel):
 
 class Clue(BaseModel):
     STATUS = (
-        (0, '下次联系'),
-        (1, '成功约访'),
-        (2, '已到访'),
-        (3, '无法成交'),
-        (4, '已报名'),
+        (0, '待跟进'),
+        (1, '下次联系'),
+        (2, '成功约访'),
+        (3, '已到访'),
+        (4, '无法成交'),
+        (5, '已报名'),
     )
     AUXILIARY_STATUS = (
         (0, '约访'),
@@ -69,6 +70,7 @@ class Clue(BaseModel):
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), choices=STATUS, null=True, blank=True,)
     next_time = models.DateTimeField(verbose_name='下次联系时间', help_text='下次联系时间', null=True, blank=True)
+    is_importance = models.BooleanField(verbose_name='重要客户', help_text='是否重要客户')
     # auxiliary_status = models.IntegerField('辅助状态', choices=AUXILIARY_STATUS, help_text='{}'.format(AUXILIARY_STATUS), null=True, blank=True)
     # plan_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
     # plan_time = models.TimeField('安排时间', help_text='安排时间', null=True, blank=True)
