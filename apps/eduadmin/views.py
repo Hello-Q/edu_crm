@@ -10,11 +10,14 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CourseSerializer
     pagination_class = None
 
+
 class SubjectsViewSet(viewsets.ModelViewSet):
     queryset = models.Subjects.objects.all()
     serializer_class = serializers.SubjectsSerializer
+    pagination_class = None
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = models.Teacher.objects.all()
     serializer_class = serializers.TeacherSerializer
+    pagination_class = None
