@@ -46,7 +46,7 @@ class StrVisitSerializer(serializers.ModelSerializer):
         fields = ['id', 'type', 'date', 'time', 'school_name', 'ordered_reception_name', 'ordered_teacher_name',
                   'ordered_course', 'ordered_course_name', 'is_visit', 'remark']
 
-from time import strftime
+
 class FollowRecordSerializer(serializers.ModelSerializer):
     creator_name = serializers.StringRelatedField(source='creator', read_only=True)
     datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")

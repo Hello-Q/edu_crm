@@ -8,7 +8,7 @@ from . import serializers
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = models.Course.objects.all()
     serializer_class = serializers.CourseSerializer
-
+    pagination_class = None
 
 class SubjectsViewSet(viewsets.ModelViewSet):
     queryset = models.Subjects.objects.all()

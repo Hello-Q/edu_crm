@@ -17,6 +17,13 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = ['id',  'name', 'type', 'subjects', 'subjects_info']
 
 
+class BaseCourseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Course
+        fields = ['id', 'name']
+
+
 class TeacherSerializer(serializers.ModelSerializer):
 
     class Meta:
