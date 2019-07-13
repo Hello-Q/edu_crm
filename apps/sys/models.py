@@ -45,12 +45,19 @@ class Department(BaseModel):
 
 
 class Role(BaseModel):
-    role_id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
-    role_name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
+    TYPE = (
+        (0, '普通'),
+        (1, '客服'),
+        (2, '课程顾问'),
+    )
+
+    id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
+    name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
+    type = models.IntegerField('角色类型', choices=TYPE, help_text='角色类型{}'.format(TYPE), default=0)
     resource = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源')
 
     def __str__(self):
-        return self.role_name
+        return self.name
 
     class Meta:
         verbose_name = '角色'
@@ -72,6 +79,7 @@ class Resource(BaseModel):
 
 
 class User(AbstractUser, BaseModel):
+
     age = models.IntegerField(verbose_name="年龄", default="1")
     tel = models.IntegerField('员工电话')
     department = models.ManyToManyField('sys.Department', verbose_name='所属部门', help_text='部门id', blank=True)
