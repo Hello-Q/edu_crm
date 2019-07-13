@@ -10,6 +10,7 @@ from rest_framework_jwt.utils import jwt_decode_handler
 from rest_framework_jwt.views import ObtainJSONWebToken, VerifyJSONWebToken, RefreshJSONWebToken
 from django.core.files.base import ContentFile
 from rest_framework.parsers import MultiPartParser, FileUploadParser
+from django_filters.rest_framework import DjangoFilterBackend
 from apps.sys import models
 from apps.sys import serializers
 
@@ -37,7 +38,8 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
-
+    filter_backends = (DjangoFilterBackend, )
+    filterset_fields = ('role',)
 
 class PermissionViewSet(viewsets.ModelViewSet):
     """
