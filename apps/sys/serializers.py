@@ -171,11 +171,11 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
 class DepartmentSerializer(serializers.ModelSerializer):
     superior_name = serializers.StringRelatedField(source='superior', read_only=True)
-    organization = OrganizationSerializer(read_only=True)
+    # organization = OrganizationSerializer(read_only=True)
 
     class Meta:
         model = models.Department
-        fields = ['id', 'name', 'tel', 'type', 'superior', 'organization', 'superior_name', 'remark']
+        fields = ['id', 'name', 'tel', 'type', 'superior', 'superior_name', 'remark']
 
 
 class DepartmentBaseSerializer(serializers.ModelSerializer):

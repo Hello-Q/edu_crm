@@ -29,7 +29,8 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
-
+    filter_backends = (DjangoFilterBackend, )
+    filterset_fields = ('type', )
 
 
 class UserViewSet(viewsets.ModelViewSet):
