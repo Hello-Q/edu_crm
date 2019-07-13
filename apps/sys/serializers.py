@@ -27,7 +27,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     roles = serializers.PrimaryKeyRelatedField(source='role', many=True, read_only=True)
     roles_name = serializers.StringRelatedField(source='role', many=True, read_only=True)
-    department_name = serializers.StringRelatedField(source='department')
+    department_name = serializers.StringRelatedField(source='department', many=True, read_only=True)
     menus = serializers.SerializerMethodField()
     buttons = serializers.SerializerMethodField()
 
