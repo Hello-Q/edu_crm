@@ -39,7 +39,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
     filter_backends = (DjangoFilterBackend, )
-    filterset_fields = ('role',)
+    filterset_fields = ('role', 'department')
 
 class PermissionViewSet(viewsets.ModelViewSet):
     """

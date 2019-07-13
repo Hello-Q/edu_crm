@@ -1,6 +1,7 @@
 from django.contrib import admin
 from . import models
 from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext, gettext_lazy as _
 # Register your models here.
 
 
@@ -16,5 +17,12 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(models.User)
 class UserAdmin(UserAdmin):
-    list_display = ['id', 'username', 'first_name', 'last_name', 'age', 'last_login',
-                    'is_superuser', 'email', 'is_staff']
+
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                       'groups', 'user_permissions')}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (_('其他信息'), {'fields': ('age', 'tel', 'department', 'head_pic', 'nickname', 'role', 'resource')})
+    )
