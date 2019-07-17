@@ -174,3 +174,4 @@ STATIC_URL = '/static/'
 
 
 HIDE_FIELD = ['update_time', 'create_time', 'del_flag']
+DATETIME_FORMAT = 'Y-m-d H:i:s'

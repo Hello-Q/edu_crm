@@ -75,6 +75,6 @@ class ClueSerializer(serializers.ModelSerializer):
 
         fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'is_importance', 'consult_date',
                   'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info',
-                      'follow_up_person', 'follow_up_person_info', 'creator', 'status', 'next_date', 'next_time', 'Visit', 'follow_info', 'remark']
+                      'follow_up_person', 'follow_up_person_info', 'creator', 'status', 'next_date', 'next_time', 'test_time', 'Visit', 'follow_info', 'remark']
 
 
