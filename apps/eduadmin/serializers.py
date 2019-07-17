@@ -25,10 +25,11 @@ class BaseCourseSerializer(serializers.ModelSerializer):
 
 
 class TeacherSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.StringRelatedField(source='user')
 
     class Meta:
         model = models.Teacher
-        fields = "__all__"
+        fields = ['id', 'teacher_name']
 
 
 class BaseTeacherSerializer(serializers.ModelSerializer):

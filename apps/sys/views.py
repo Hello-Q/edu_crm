@@ -42,6 +42,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, )
     filterset_fields = ('role', 'department')
 
+
 class PermissionViewSet(viewsets.ModelViewSet):
     """
     权限列表
@@ -70,3 +71,6 @@ class ResourceViewSet(viewsets.ModelViewSet):
     """资源"""
     queryset = models.Resource.objects.all()
     serializer_class = serializers.ResourceSerializer
+
+
+# class
