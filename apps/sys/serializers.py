@@ -161,7 +161,6 @@ class BaseUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'nickname', 'tel']
 
 
-
 class OrganizationSerializer(serializers.ModelSerializer):
 
     class Meta:

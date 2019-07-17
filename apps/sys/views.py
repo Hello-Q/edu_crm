@@ -2,7 +2,7 @@
 from django.contrib.auth.models import Permission, Group
 from jwt import exceptions
 from rest_framework import status
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, mixins
 from rest_framework.compat import coreapi, coreschema
 from rest_framework.response import Response
 from rest_framework.schemas import AutoSchema
@@ -41,6 +41,14 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
     filter_backends = (DjangoFilterBackend, )
     filterset_fields = ('role', 'department')
+
+
+# class UserBaseView(mixins.ListModelMixin,
+#                    viewsets.GenericViewSet):
+#     """
+#     基础用户信息
+#     """
+#     queryset = models.User.objects.all()
 
 
 class PermissionViewSet(viewsets.ModelViewSet):

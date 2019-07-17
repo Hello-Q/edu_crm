@@ -53,3 +53,4 @@ class FollowRecordViewSet(views.FalseDelModelViewSet):
     """跟进记录"""
     queryset = models.FollowRecord.objects.filter(del_flag=0)
     serializer_class = serializers.FollowRecordSerializer
+
