@@ -55,7 +55,7 @@ class FollowRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.FollowRecord
-        fields = ['id', 'datetime', 'clue', 'clue_status', 'content', 'creator_name']
+        fields = ['id', 'follow_time', 'clue', 'clue_status', 'content', 'creator_name']
 
 
 class FailingTypeSerializer(serializers.ModelSerializer):
