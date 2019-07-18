@@ -51,10 +51,11 @@ class StrVisitSerializer(serializers.ModelSerializer):
 class FollowRecordSerializer(serializers.ModelSerializer):
     creator_name = serializers.StringRelatedField(source='creator', read_only=True)
     datetime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    clue_status = serializers.ReadOnlyField()
 
     class Meta:
         model = models.FollowRecord
-        fields = ['id', 'datetime', 'clue', 'content', 'creator_name']
+        fields = ['id', 'datetime', 'clue', 'clue_status', 'content', 'creator_name']
 
 
 class FailingTypeSerializer(serializers.ModelSerializer):

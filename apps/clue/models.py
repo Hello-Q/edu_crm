@@ -73,7 +73,7 @@ class Clue(BaseModel):
     intended_course = models.ManyToManyField('eduadmin.Course', related_name='clue_intended_course', verbose_name='意向课程', help_text='意向课程',  blank=True)
     intended_school = models.ManyToManyField('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', blank=True)
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
-    status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), choices=STATUS, null=True, blank=True,)
+    status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), default=0, choices=STATUS)
     next_time = models.DateTimeField(verbose_name='下次联系时间', help_text='下次联系时间', null=True, blank=True)
     failing_type = models.ForeignKey('clue.FailingType', on_delete=models.CASCADE, verbose_name='未成交原因类型', null=True, blank=True)
     failing_cause = models.CharField(max_length=240, verbose_name='未成交原因', null=True, blank=True)
@@ -120,6 +120,7 @@ class Visit(BaseModel):
 class FollowRecord(BaseModel):
     id = models.AutoField(primary_key=True)
     clue = models.ForeignKey('clue.Clue', on_delete=models.CASCADE, verbose_name='关联线索')
+    clue_status = models.CharField(max_length=240)
     datetime = models.DateTimeField(auto_now_add=True, )
     content = models.TextField(max_length=1000)
     creator = models.ForeignKey('sys.User', related_name='follow_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')

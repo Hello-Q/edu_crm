@@ -1,5 +1,5 @@
 # Create your views here.
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from apps.clue import models
 from apps.clue import serializers
@@ -53,4 +53,12 @@ class FollowRecordViewSet(views.FalseDelModelViewSet):
     """跟进记录"""
     queryset = models.FollowRecord.objects.filter(del_flag=0)
     serializer_class = serializers.FollowRecordSerializer
+
+    def perform_create(self, serializer):
+        # 获取线索状态并保存
+        clue_id = serializer.validated_data['clue'].id
+        status_id = models.Clue.objects.get(id=clue_id).status
+        serializer.validated_data['clue_status'] = models.Clue.STATUS[status_id][1]
+        # 自动保存创建人和更新人
+        serializer.save(operator=self.request.user, creator=self.request.user)
 
