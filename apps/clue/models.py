@@ -39,6 +39,11 @@ class Channel(BaseModel):
         ordering = ['id']
 
 
+class FailingType(BaseModel):
+    id = models.AutoField(primary_key=True)
+    type_name = models.CharField(max_length=25, verbose_name='无法成交原因类型')
+
+
 class Clue(BaseModel):
     STATUS = (
         (0, '待跟进'),
@@ -70,6 +75,8 @@ class Clue(BaseModel):
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), choices=STATUS, null=True, blank=True,)
     next_time = models.DateTimeField(verbose_name='下次联系时间', help_text='下次联系时间', null=True, blank=True)
+    failing_type = models.ForeignKey('clue.FailingType', on_delete=models.CASCADE, verbose_name='未成交原因类型', null=True, blank=True)
+    failing_cause = models.CharField(max_length=240, verbose_name='未成交原因', null=True, blank=True)
     is_importance = models.NullBooleanField(verbose_name='重要客户', help_text='是否重要客户', null=True, blank=True)
     # auxiliary_status = models.IntegerField('辅助状态', choices=AUXILIARY_STATUS, help_text='{}'.format(AUXILIARY_STATUS), null=True, blank=True)
     # plan_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
@@ -80,7 +87,6 @@ class Clue(BaseModel):
     # plan_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.DO_NOTHING, null=True, blank=True)
     creator = models.ForeignKey('sys.User', related_name='clue_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='clue_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
-
 
     def __str__(self):
         return self.name
