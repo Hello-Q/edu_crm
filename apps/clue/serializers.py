@@ -77,7 +77,7 @@ class ClueSerializer(serializers.ModelSerializer):
     Visit = StrVisitSerializer(source='visit_set', many=True, read_only=True)
     follow_info = FollowRecordSerializer(source='followrecord_set', many=True, read_only=True)
     next_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", allow_null=True)
-    failing_type_info = FailingTypeSerializer(source='failing_type')
+    failing_type_info = FailingTypeSerializer(source='failing_type', read_only=True)
 
     class Meta:
         model = models.Clue
