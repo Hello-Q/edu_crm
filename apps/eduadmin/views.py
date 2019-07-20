@@ -4,6 +4,8 @@ from . import models
 from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
+from apps.sys.models import Department
+from rest_framework import status
 # Create your views here.
 
 
@@ -26,22 +28,16 @@ class TeacherViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeacherSerializer
     pagination_class = None
 
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     teachers = []
-    #     for teacher in queryset:
-    #         departments = teacher.user.department.all()
-    #         for department in departments:
-    #             print(department.name)
-    #             if department.name == '中山校区':
-    #                 print(department)
-    #                 teachers.append(teacher)
-    #                 print(teachers)
-
     def list(self, request, *args, **kwargs):
         department_id = request.GET.get('department')
         if department_id:
             department_id = int(department_id)
+            department = Department.objects.filter(id=department_id)
+            if not department:
+                data = {
+                    'department': "选择一个有效的选项： 该选择不在可用的选项中。"
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
             tea_queryset = self.queryset
             queryset = []
             for teacher in tea_queryset:
