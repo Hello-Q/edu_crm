@@ -14,6 +14,6 @@ class SubjectsAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.Teacher)
-class TeacherAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user']
+# @admin.register(models.Teacher)
+# class TeacherAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'user']
