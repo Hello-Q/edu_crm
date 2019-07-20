@@ -39,21 +39,23 @@ class TeacherViewSet(viewsets.ModelViewSet):
     #                 print(teachers)
 
     def list(self, request, *args, **kwargs):
-        department_id = int(request.GET.get('department'))
-
-        queryset = self.queryset
-        teachers = []
-        for teacher in queryset:
-            departments = teacher.user.department.all()
-            for department in departments:
-                if department.id == department_id:
-                    teachers.append(teacher)
-
-        page = self.paginate_queryset(teachers)
+        department_id = request.GET.get('department')
+        if department_id:
+            department_id = int(department_id)
+            tea_queryset = self.queryset
+            queryset = []
+            for teacher in tea_queryset:
+                departments = teacher.user.department.all()
+                for department in departments:
+                    if department.id == department_id:
+                        queryset.append(teacher)
+        else:
+            queryset = self.queryset
+        page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(teachers, many=True)
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
 
