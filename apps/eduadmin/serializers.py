@@ -29,7 +29,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Teacher
-        fields = ['id', 'teacher_name']
+        fields = ['id', 'user', 'teacher_name', 'course']
 
 
 class BaseTeacherSerializer(serializers.ModelSerializer):
