@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from . import models
 from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models.query import QuerySet
 from rest_framework.response import Response
 from apps.sys.models import Department
 from rest_framework import status
@@ -23,37 +24,44 @@ class SubjectsViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
 
+from django_filters import rest_framework as filters
+
+class SourceChannelFilter(filters.FilterSet):
+
+
+    class Meta:
+        model = User
+        fields = ['department']
+
+
+
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = models.Teacher.objects.all()
     serializer_class = serializers.TeacherSerializer
     pagination_class = None
+    # filter_backends = (DjangoFilterBackend, )
+    # filterset_class = SourceChannelFilter
 
-    def list(self, request, *args, **kwargs):
-        department_id = request.GET.get('department')
-        if department_id:
-            department_id = int(department_id)
-            department = Department.objects.filter(id=department_id)
-            if not department:
-                data = {
-                    'department': "选择一个有效的选项： 该选择不在可用的选项中。"
-                }
-                return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            tea_queryset = self.queryset
-            queryset = []
-            for teacher in tea_queryset:
-                departments = teacher.user.department.all()
-                for department in departments:
-                    if department.id == department_id:
-                        queryset.append(teacher)
-        else:
-            queryset = self.queryset
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        assert self.queryset is not None, (
+            "'%s' should either include a `queryset` attribute, "
+            "or override the `get_queryset()` method."
+            % self.__class__.__name__
+        )
 
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            # Ensure queryset is re-evaluated on each request.
+            department_id = self.request.GET.get("department")
 
-
-
+            if department_id:
+                # if not Department.objects.filter(id=department_id):
+                #     print("department")
+                #     data = {
+                #             'department': "选择一个有效的选项： 该选择不在可用的选项中。"
+                #             }
+                #     return None
+                queryset = queryset.all().filter(user__department=department_id)
+            else:
+                queryset = queryset.all()
+        return queryset
