@@ -12,11 +12,11 @@ from django.db import models
 
 
 class Subjects(models.Model):
-    sub_id = models.AutoField(primary_key=True, verbose_name='科系编号', help_text='科系id')
-    sub_name = models.CharField(max_length=10, verbose_name='科系名称', help_text='科系名称')
+    id = models.AutoField(primary_key=True, verbose_name='科系编号', help_text='科系id')
+    name = models.CharField(max_length=10, verbose_name='科系名称', help_text='科系名称')
 
     def __str__(self):
-        return self.sub_name
+        return self.name
 
     class Meta:
         verbose_name = '科系'

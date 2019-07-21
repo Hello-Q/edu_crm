@@ -1,6 +1,6 @@
 from . import models
 from rest_framework import serializers
-
+from drf_writable_nested import WritableNestedModelSerializer
 
 class SubjectsSerializer(serializers.ModelSerializer):
 
@@ -9,12 +9,27 @@ class SubjectsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CourseSerializer(serializers.ModelSerializer):
+class DetailedCourseSerializer(serializers.ModelSerializer):
     subjects_info = SubjectsSerializer(source='subjects', read_only=True)
 
     class Meta:
         model = models.Course
         fields = ['id',  'name', 'type', 'subjects', 'subjects_info']
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = ['id',  'name']
+
+
+class SubjectsCourseSerializer(WritableNestedModelSerializer):
+    course = CourseSerializer(source='course_set', many=True)
+
+    class Meta:
+        model = models.Subjects
+        fields = ['id', 'name', 'course']
+
 
 
 class BaseCourseSerializer(serializers.ModelSerializer):

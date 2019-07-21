@@ -12,7 +12,7 @@ from rest_framework import status
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = models.Course.objects.all()
-    serializer_class = serializers.CourseSerializer
+    serializer_class = serializers.DetailedCourseSerializer
     pagination_class = None
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('subjects',)
@@ -24,15 +24,11 @@ class SubjectsViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
 
-from django_filters import rest_framework as filters
-
-class SourceChannelFilter(filters.FilterSet):
-
-
-    class Meta:
-        model = User
-        fields = ['department']
-
+class SubjectsCourseViewSet(viewsets.ModelViewSet):
+    queryset = models.Subjects.objects.all()
+    serializer_class = serializers.SubjectsCourseSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('id',)
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
