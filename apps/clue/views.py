@@ -62,3 +62,12 @@ class FollowRecordViewSet(views.FalseDelModelViewSet):
         # 自动保存创建人和更新人
         serializer.save(operator=self.request.user, creator=self.request.user)
 
+
+class VisitViewSet(views.FalseDelModelViewSet):
+    """访问记录"""
+    queryset = models.Visit.objects.filter(del_flag=0)
+    serializer_class = serializers.VisitSerializer
+
+
+
+

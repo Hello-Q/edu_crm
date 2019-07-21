@@ -9,6 +9,7 @@ router.register('channel', views.ChannelViewSet)
 router.register('clue', views.ClueViewSet)
 router.register('channel-type', views.ChannelTypeViewSet)
 router.register('follow-record', views.FollowRecordViewSet)
+router.register('visit', views.VisitViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
