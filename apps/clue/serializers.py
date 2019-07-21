@@ -44,7 +44,7 @@ class StrVisitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Visit
-        fields = ['id', 'type', 'date', 'time', 'school_name', 'ordered_reception_name', 'ordered_teacher_name',
+        fields = ['id', 'type', 'visit_time', 'school_name', 'ordered_reception_name', 'ordered_teacher_name',
                   'ordered_course', 'ordered_course_name', 'is_visit', 'remark']
 
 
