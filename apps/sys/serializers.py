@@ -88,36 +88,11 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ['id', 'username', 'nickname', 'head_pic', 'password']
+        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'tel']
 
     def create(self, validated_data):
-        """
-        We have a bit of extra checking around this in order to provide
-        descriptive messages when something goes wrong, but this method is
-        essentially just:
-
-            return ExampleModel.objects.create(**validated_data)
-
-        If there are many to many fields present on the instance then they
-        cannot be set until the model is instantiated, in which case the
-        implementation is like so:
-
-            example_relationship = validated_data.pop('example_relationship')
-            instance = ExampleModel.objects.create(**validated_data)
-            instance.example_relationship = example_relationship
-            return instance
-
-        The default implementation also does not handle nested relationships.
-        If you want to support writable nested relationships you'll need
-        to write an explicit `.create()` method.
-        """
         raise_errors_on_nested_writes('create', self, validated_data)
-
         ModelClass = self.Meta.model
-
-        # Remove many-to-many relationships from validated_data.
-        # They are not valid arguments to the default `.create()` method,
-        # as they require that the instance has already been saved.
         info = model_meta.get_field_info(ModelClass)
         many_to_many = {}
         for field_name, relation_info in info.relations.items():
