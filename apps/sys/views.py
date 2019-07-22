@@ -38,7 +38,7 @@ class UserViewSet(views.FalseDelModelViewSet):
     """
     对系统用户进行数据操作
     """
-    queryset = models.User.objects.all()
+    queryset = models.User.objects.filter(del_flag__exact=False)
     serializer_class = serializers.UserSerializer
     filter_backends = (DjangoFilterBackend, )
     filterset_fields = ('role', 'department', 'role__name')
