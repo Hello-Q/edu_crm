@@ -20,7 +20,7 @@ class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Role
-        fields = '__all__'
+        fields = ['id', 'name', 'resource']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
