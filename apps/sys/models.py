@@ -25,10 +25,15 @@ class Organization(BaseModel):
 
 
 class Department(BaseModel):
+    TYPE = (
+        (0, '分公司'),
+        (1, '校区'),
+        (2, '部门'),
+    )
     id = models.AutoField(primary_key=True, verbose_name='部门编号', help_text='部门id')
     name = models.CharField(max_length=10, verbose_name='部门名称', help_text='部门名称')
     tel = models.CharField(max_length=15, verbose_name='电话', help_text='电话', null=True)
-    type = models.IntegerField('类型', choices=((0, '分公司'), (1, '校区'), (2, '部门'), ), null=True)
+    type = models.IntegerField('类型', choices=TYPE)
     superior = models.ForeignKey('sys.Department', verbose_name='上级部门', on_delete=models.DO_NOTHING,
                                  null=True, blank=True)
     organization = models.ForeignKey('sys.Organization', on_delete=models.DO_NOTHING,
