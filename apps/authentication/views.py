@@ -23,7 +23,6 @@ class LoginView(ObtainJSONWebToken):
     验证通过返回token进行登录
     """
 
-
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 

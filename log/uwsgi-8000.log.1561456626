@@ -1,9 +1,0 @@
-Not Found: /
-[pid: 13779|app: 0|req: 1/1] 112.64.199.58 () {26 vars in 261 bytes} [Tue Jun 25 06:19:18 2019] GET / => generated 2459 bytes in 177 msecs (HTTP/1.0 404) 3 headers in 102 bytes (1 switches on core 0)
-Not Found: /download/resources/com.atlassian.confluence.plugins.system-templates:system-template-resources/assets/images/welcome.png
-[pid: 13779|app: 0|req: 2/2] 185.10.68.236 () {28 vars in 642 bytes} [Tue Jun 25 14:40:18 2019] HEAD /download/resources/com.atlassian.confluence.plugins.system-templates:system-template-resources/assets/images/welcome.png => generated 2840 bytes in 7 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
-Not Found: /
-[pid: 13779|app: 0|req: 3/3] 60.215.45.234 () {38 vars in 755 bytes} [Tue Jun 25 17:57:05 2019] GET / => generated 2461 bytes in 11 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
-Not Found: /favicon.ico
-[pid: 13779|app: 0|req: 4/4] 60.215.45.234 () {38 vars in 704 bytes} [Tue Jun 25 17:57:05 2019] GET /favicon.ico => generated 2512 bytes in 4 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
-Tue Jun 25 17:57:06 2019 - logsize: 1110, triggering rotation to /home/yanqing0709/python/edu_crm_api/log/uwsgi-8000.log.1561456626...

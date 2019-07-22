@@ -1,9 +1,0 @@
-[pid: 13779|app: 0|req: 30/30] 60.215.45.234 () {38 vars in 733 bytes} [Tue Jun 25 17:57:41 2019] GET /static/rest_framework/js/bootstrap.min.js => generated 2602 bytes in 4 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
-Not Found: /static/rest_framework/js/prettify-min.js
-[pid: 13779|app: 0|req: 31/31] 60.215.45.234 () {38 vars in 731 bytes} [Tue Jun 25 17:57:41 2019] GET /static/rest_framework/js/prettify-min.js => generated 2599 bytes in 3 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
-Not Found: /static/rest_framework/js/default.js
-[pid: 13779|app: 0|req: 32/32] 60.215.45.234 () {38 vars in 721 bytes} [Tue Jun 25 17:57:42 2019] GET /static/rest_framework/js/default.js => generated 2584 bytes in 4 msecs (HTTP/1.1 404) 3 headers in 102 bytes (1 switches on core 0)
-Not Found: /
-[pid: 13779|app: 0|req: 33/33] 127.0.0.1 () {42 vars in 787 bytes} [Tue Jun 25 18:08:09 2019] GET / => generated 2449 bytes in 5 msecs (HTTP/1.0 404) 3 headers in 102 bytes (1 switches on core 0)
-Not Found: /favicon.ico
-Tue Jun 25 18:08:10 2019 - logsize: 1050, triggering rotation to /home/yanqing0709/python/edu_crm_api/log/uwsgi-8000.log.1561457290...

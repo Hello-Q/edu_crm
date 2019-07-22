@@ -13,6 +13,7 @@ from rest_framework.parsers import MultiPartParser, FileUploadParser
 from django_filters.rest_framework import DjangoFilterBackend
 from apps.sys import models
 from apps.sys import serializers
+from utils import views
 
 
 class OrganizationViewSet(viewsets.ModelViewSet):
@@ -33,7 +34,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     filterset_fields = ('type', )
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(views.FalseDelModelViewSet):
     """
     对系统用户进行数据操作
     """
