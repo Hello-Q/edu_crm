@@ -24,7 +24,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.OrganizationSerializer
 
 
-class DepartmentViewSet(viewsets.ModelViewSet):
+class DepartmentViewSet(views.FalseDelModelViewSet):
     """
     部门数据
     """
