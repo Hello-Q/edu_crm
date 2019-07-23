@@ -73,13 +73,14 @@ class Role(BaseModel):
     )
 
     id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
-    name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
+    group = models.OneToOneField(Group, on_delete=models.CASCADE, null=True, blank=True)
+    # name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
     type = models.IntegerField('角色类型', choices=TYPE, help_text='角色类型{}'.format(TYPE), default=0)
-    resource = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源')
-    data_permissions = models.ForeignKey('sys.DataPermissions', verbose_name='可访问数据', on_delete=models.CASCADE)
+    resource = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源', null=True, blank=True)
+    # data_permissions = models.ForeignKey('sys.DataPermissions', verbose_name='可访问数据', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.group.name
 
     class Meta:
         verbose_name = '角色'

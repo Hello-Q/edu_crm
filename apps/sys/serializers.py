@@ -4,9 +4,9 @@ from drf_dynamic_fields import DynamicFieldsMixin
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import Group
 from rest_framework.serializers import raise_errors_on_nested_writes, model_meta, traceback
+from drf_writable_nested import WritableNestedModelSerializer
 
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     """用户组"""
 
     class Meta:
@@ -14,35 +14,35 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = "__all__"
 
 
-class RoleSerializer(serializers.ModelSerializer):
+class RoleSerializer(WritableNestedModelSerializer):
     """角色组"""
     # resources = serializers.PrimaryKeyRelatedField(source='resource', many=True, queryset=models.Resource.objects.all())
-
+    group = GroupSerializer()
 
     class Meta:
         model = models.Role
-        fields = ['id', 'name', 'resource']
+        fields = ['id', 'resource', 'group']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
 
-    roles = serializers.PrimaryKeyRelatedField(source='role', many=True, read_only=True)
-    roles_name = serializers.StringRelatedField(source='role', many=True, read_only=True)
+    roles = serializers.PrimaryKeyRelatedField(source='groups', many=True, read_only=True)
+    roles_name = serializers.StringRelatedField(source='groups', many=True, read_only=True)
     department_name = serializers.StringRelatedField(source='department', many=True, read_only=True)
     menus = serializers.SerializerMethodField()
     buttons = serializers.SerializerMethodField()
 
     class Meta:
         model = models.User
-        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'menus', 'roles', 'roles_name', 'department_name', 'buttons']
+        fields = ['id', 'username', 'nickname', 'head_pic', 'password',  'department_name', 'roles', 'roles_name','menus', 'buttons']
 
     def get_menus(self, ojb):
         user = models.User.objects.get(pk=ojb.id)
-        roles = user.role.all()
+        groups = user.groups.all()
         # print(roles)
         resource = models.Resource.objects.none()
-        for role in roles:
-            resource = resource | role.resource.filter(resource_type=1)
+        for group in groups:
+            resource = resource | group.role.resource.filter(resource_type=1)
         resource = user.resource.filter(resource_type=1) | resource
         menu_list = []
         for menu in resource.values():
@@ -51,11 +51,11 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def get_buttons(self, ojb):
         user = models.User.objects.get(pk=ojb.id)
-        roles = user.role.all()
+        groups = user.groups.all()
         # print(roles)
         resource = models.Resource.objects.none()
-        for role in roles:
-            resource = resource | role.resource.filter(resource_type=2)
+        for group in groups:
+            resource = resource | group.role.resource.filter(resource_type=2)
         resource = user.resource.filter(resource_type=2) | resource
         button_list = []
         for menu in resource.values():

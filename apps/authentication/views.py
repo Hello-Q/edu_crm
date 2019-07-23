@@ -118,8 +118,8 @@ class PersonalInfo(generics.RetrieveUpdateAPIView):
         user = self.get_user(request)
         if isinstance(user, User):
             user = self.get_user(request)
-            roles = user.role.all()
-            user.roles = roles
+            # roles = user.role.all()
+            # user.roles = roles
             serializer = UserInfoSerializer(user, context=serializer_context)
             return Response(serializer.data)
         else:
@@ -146,6 +146,7 @@ class LogoutView(generics.DestroyAPIView, PersonalInfo):
 
     def destroy(self, request, *args, **kwargs):
         user = self.get_user(request)
+        print(2, user)
         # 找出所有token
         token = models.Token.objects.filter(user=user)
         instance = token
