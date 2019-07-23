@@ -14,6 +14,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from apps.sys import models
 from apps.sys import serializers
 from utils import views
+from . import filters
 
 
 class OrganizationViewSet(viewsets.ModelViewSet):
@@ -41,7 +42,7 @@ class UserViewSet(views.FalseDelModelViewSet):
     queryset = models.User.objects.filter(del_flag__exact=False)
     serializer_class = serializers.UserSerializer
     filter_backends = (DjangoFilterBackend, )
-    filterset_fields = ('groups', 'department', 'groups__name')
+    filterset_class = filters.UsersFilter
 
 
 # class UserBaseView(mixins.ListModelMixin,
