@@ -31,6 +31,10 @@ class UserInfoSerializer(serializers.ModelSerializer):
     menus = serializers.SerializerMethodField()
     buttons = serializers.SerializerMethodField()
 
+    class Meta:
+        model = models.User
+        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'menus', 'roles', 'roles_name', 'department_name', 'buttons']
+
     def get_menus(self, ojb):
         user = models.User.objects.get(pk=ojb.id)
         roles = user.role.all()
@@ -78,10 +82,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-    class Meta:
-        model = models.User
-        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'menus', 'roles', 'roles_name', 'department_name', 'buttons']
 
 
 class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
