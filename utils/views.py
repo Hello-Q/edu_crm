@@ -10,6 +10,12 @@ class FalseDelModelViewSet(viewsets.ModelViewSet):
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def retrieve(self, request, *args, **kwargs):
+        print(request.user)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
     def perform_create(self, serializer):
         # 自动保存创建人和更新人
         serializer.save(operator=self.request.user, creator=self.request.user)

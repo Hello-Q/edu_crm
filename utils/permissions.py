@@ -18,12 +18,11 @@ class ExpandDjangoModelPermissions(DjangoModelPermissions):
         Given a model and an HTTP method, return the list of permission
         codes that the user is required to have.
         """
-        print(model_cls)
         kwargs = {
             'app_label': model_cls._meta.app_label,
             'model_name': model_cls._meta.model_name
         }
-        print(kwargs)
         if method not in self.perms_map:
             raise exceptions.MethodNotAllowed(method)
+        print('test', [perm % kwargs for perm in self.perms_map[method]])
         return [perm % kwargs for perm in self.perms_map[method]]

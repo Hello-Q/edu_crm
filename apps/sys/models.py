@@ -60,6 +60,7 @@ class Role(BaseModel):
     name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
     type = models.IntegerField('角色类型', choices=TYPE, help_text='角色类型{}'.format(TYPE), default=0)
     resource = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源')
+    data_permissions = models.ForeignKey('sys.DataPermissions', verbose_name='可访问数据', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -69,11 +70,28 @@ class Role(BaseModel):
         verbose_name_plural = '角色管理'
 
 
+class DataPermissions(BaseModel):
+    id = models.AutoField(primary_key=True, verbose_name='数据权限编号')
+    name = models.CharField('数据权限名称', max_length=25)
+    key = models.CharField('数据权限key', max_length=25)
+    creator = models.ForeignKey('sys.User', related_name='data_permissions_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
+    operator = models.ForeignKey('sys.User', related_name='data_permissions_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '数据权限'
+        verbose_name_plural = '数据权限管理'
+
+
 class Resource(BaseModel):
     resource_id = models.AutoField(primary_key=True, verbose_name='资源编号', help_text='资源id')
     resource_name = models.CharField(max_length=15, verbose_name='资源名称', help_text='资源名称')
     resource_key = models.CharField(max_length=25, verbose_name='资源key', unique=True)
     resource_type = models.IntegerField(choices=((1, '菜单权限'), (2, '按钮权限')), verbose_name='资源类型', help_text='资源类型')
+
+
 
     def __str__(self):
         return self.resource_name

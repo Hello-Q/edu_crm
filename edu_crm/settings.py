@@ -57,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.middleware.AuthenticationMiddleware',
+    'utils.middleware.TokenToUser',
+    'utils.middleware.DataPermissionsMiddleware',
 ]
 
 ROOT_URLCONF = 'edu_crm.urls'
@@ -147,7 +149,8 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
+        'utils.permissions.ExpandDjangoModelPermissions',
 
     ),
 }
