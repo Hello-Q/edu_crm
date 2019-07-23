@@ -108,11 +108,10 @@ class User(AbstractUser, BaseModel):
     department = models.ManyToManyField('sys.Department', verbose_name='所属部门', help_text='部门id', blank=True)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
-    role = models.ManyToManyField('Role', verbose_name='角色')
+    # role = models.ManyToManyField('Role', verbose_name='角色')
     resource = models.ManyToManyField('Resource', verbose_name='拥有资源', help_text='拥有资源', blank=True)
     creator = models.ForeignKey('sys.User', related_name='user_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
     operator = models.ForeignKey('sys.User', related_name='user_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
-
 
 
     class Meta:

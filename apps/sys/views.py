@@ -41,7 +41,7 @@ class UserViewSet(views.FalseDelModelViewSet):
     queryset = models.User.objects.filter(del_flag__exact=False)
     serializer_class = serializers.UserSerializer
     filter_backends = (DjangoFilterBackend, )
-    filterset_fields = ('role', 'department', 'role__name')
+    filterset_fields = ('groups', 'department', 'groups__name')
 
 
 # class UserBaseView(mixins.ListModelMixin,
