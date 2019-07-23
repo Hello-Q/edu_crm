@@ -18,6 +18,7 @@ class RoleSerializer(serializers.ModelSerializer):
     """角色组"""
     # resources = serializers.PrimaryKeyRelatedField(source='resource', many=True, queryset=models.Resource.objects.all())
 
+
     class Meta:
         model = models.Role
         fields = ['id', 'name', 'resource']
