@@ -99,7 +99,49 @@ class Resource(BaseModel):
     class Meta:
         verbose_name = '资源'
         verbose_name_plural = '资源管理'
+from django.core.exceptions import PermissionDenied
+from django.contrib import auth
+from django.conf import settings
+from django.utils.module_loading import import_string
+from django.core.exceptions import ImproperlyConfigured
+# from django.contrib.auth.backends import ModelBackend
+#
+# class MyModelBackend(ModelBackend):
+#     pass
 
+def get_backends():
+    return _get_backends(return_tuples=False)
+def _user_has_perm(user, perm, obj):
+    """
+    A backend can raise `PermissionDenied` to short-circuit permission checking.
+    """
+
+    for backend in get_backends():
+
+        if not hasattr(backend, 'has_perm'):
+            continue
+        try:
+            if backend.has_perm(user, perm, obj):
+                return True
+        except PermissionDenied:
+            return False
+    return False
+
+
+def load_backend(path):
+    return import_string(path)()
+
+def _get_backends(return_tuples=False):
+    backends = []
+    for backend_path in settings.AUTHENTICATION_BACKENDS:
+        backend = load_backend(backend_path)
+        backends.append((backend, backend_path) if return_tuples else backend)
+    if not backends:
+        raise ImproperlyConfigured(
+            'No authentication backends have been defined. Does '
+            'AUTHENTICATION_BACKENDS contain anything?'
+        )
+    return backends
 
 class User(AbstractUser, BaseModel):
 
@@ -108,7 +150,7 @@ class User(AbstractUser, BaseModel):
     department = models.ManyToManyField('sys.Department', verbose_name='所属部门', help_text='部门id', blank=True)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
-    # role = models.ManyToManyField('Role', verbose_name='角色')
+    role = models.ManyToManyField('Role', verbose_name='角色', blank=True)
     resource = models.ManyToManyField('Resource', verbose_name='拥有资源', help_text='拥有资源', blank=True)
     creator = models.ForeignKey('sys.User', related_name='user_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
     operator = models.ForeignKey('sys.User', related_name='user_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
@@ -121,3 +163,28 @@ class User(AbstractUser, BaseModel):
     def __str__(self):
         return self.nickname
 
+
+
+    def has_perm(self, perm, obj=None):
+        print(perm)
+        """
+        Return True if the user has the specified permission. Query all
+        available auth backends, but return immediately if any backend returns
+        True. Thus, a user who has permission from a single auth backend is
+        assumed to have permission in general. If an object is provided, check
+        permissions for that object.
+        """
+        # Active superusers have all permissions.
+        if self.is_active and self.is_superuser:
+            return True
+
+        # Otherwise we need to check the backends.
+        return _user_has_perm(self, perm, obj)
+
+    def has_perms(self, perm_list, obj=None):
+        """
+        Return True if the user has each of the specified permissions. If
+        object is passed, check if the user has all required perms for it.
+        """
+
+        return all(self.has_perm(perm, obj) for perm in perm_list)

@@ -15,9 +15,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from apps.clue import filters
 from rest_framework import permissions
 from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, DjangoModelPermissions
-from utils.permissions import ExpandDjangoModelPermissions
+from utils.permissions import ExpandDjangoModelPermissions, DjangoObjectPermissions
 from utils import views
-
+from django.shortcuts import get_object_or_404
 
 class ChannelTypeViewSet(viewsets.ModelViewSet):
     """
