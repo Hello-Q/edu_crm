@@ -87,7 +87,6 @@ class Role(BaseModel):
     class Meta:
         verbose_name = '角色'
         verbose_name_plural = '角色管理'
-        unique_together = ('name', 'creator')
 
 
 class Resource(BaseModel):

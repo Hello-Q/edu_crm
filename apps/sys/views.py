@@ -64,7 +64,7 @@ class PermissionViewSet(viewsets.ModelViewSet):
 
 
 
-class RoleViewSet(viewsets.ModelViewSet):
+class RoleViewSet(views.FalseDelModelViewSet):
     """
     角色
     """
