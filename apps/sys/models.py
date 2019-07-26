@@ -2,7 +2,8 @@ from django.db import models
 from utils.base_modle import BaseModel
 from django.contrib.auth.models import AbstractUser
 from utils.storage import ImageStorage
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
+
 # Create your models here.
 
 
@@ -73,14 +74,13 @@ class Role(BaseModel):
     )
 
     id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
-    group = models.OneToOneField(Group, on_delete=models.CASCADE, null=True, blank=True)
-    # name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
+    name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
     type = models.IntegerField('角色类型', choices=TYPE, help_text='角色类型{}'.format(TYPE), default=0)
     resource = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源', null=True, blank=True)
     # data_permissions = models.ForeignKey('sys.DataPermissions', verbose_name='可访问数据', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.group.name
+        return self.name
 
     class Meta:
         verbose_name = '角色'
@@ -92,6 +92,7 @@ class Resource(BaseModel):
     resource_name = models.CharField(max_length=15, verbose_name='资源名称', help_text='资源名称')
     resource_key = models.CharField(max_length=25, verbose_name='资源key', unique=True)
     resource_type = models.IntegerField(choices=((1, '菜单权限'), (2, '按钮权限')), verbose_name='资源类型', help_text='资源类型')
+    permissions = models.ManyToManyField(Permission, blank=True, verbose_name='拥有权限')
 
     def __str__(self):
         return self.resource_name
@@ -117,7 +118,6 @@ def _user_has_perm(user, perm, obj):
     """
 
     for backend in get_backends():
-
         if not hasattr(backend, 'has_perm'):
             continue
         try:
@@ -150,11 +150,11 @@ class User(AbstractUser, BaseModel):
     department = models.ManyToManyField('sys.Department', verbose_name='所属部门', help_text='部门id', blank=True)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
-    role = models.ManyToManyField('Role', verbose_name='角色', blank=True)
-    resource = models.ManyToManyField('Resource', verbose_name='拥有资源', help_text='拥有资源', blank=True)
+    roles = models.ManyToManyField('Role', verbose_name='角色', blank=True)
+    resources = models.ManyToManyField('Resource', verbose_name='拥有资源', help_text='拥有资源', blank=True)
     creator = models.ForeignKey('sys.User', related_name='user_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
     operator = models.ForeignKey('sys.User', related_name='user_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
-
+    # user_permissions =
 
     class Meta:
         verbose_name = '员工'
@@ -166,7 +166,6 @@ class User(AbstractUser, BaseModel):
 
 
     def has_perm(self, perm, obj=None):
-        print(perm)
         """
         Return True if the user has the specified permission. Query all
         available auth backends, but return immediately if any backend returns
@@ -188,3 +187,4 @@ class User(AbstractUser, BaseModel):
         """
 
         return all(self.has_perm(perm, obj) for perm in perm_list)
+
