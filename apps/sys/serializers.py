@@ -13,7 +13,7 @@ class RoleSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = models.Role
-        fields = ['id', 'name', 'type', 'resource']
+        fields = ['id', 'name', 'resource']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
