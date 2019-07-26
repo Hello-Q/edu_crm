@@ -61,12 +61,7 @@ class PermissionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PermissionSerializer
 
 
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    用户组
-    """
-    queryset = Group.objects.all()
-    serializer_class = serializers.GroupSerializer
+
 
 
 class RoleViewSet(viewsets.ModelViewSet):

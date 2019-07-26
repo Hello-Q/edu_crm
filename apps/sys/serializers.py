@@ -6,22 +6,14 @@ from django.contrib.auth.models import Group
 from rest_framework.serializers import raise_errors_on_nested_writes, model_meta, traceback
 from drf_writable_nested import WritableNestedModelSerializer
 
-class GroupSerializer(serializers.ModelSerializer):
-    """用户组"""
-
-    class Meta:
-        model = Group
-        fields = "__all__"
-
 
 class RoleSerializer(WritableNestedModelSerializer):
     """角色组"""
     # resources = serializers.PrimaryKeyRelatedField(source='resource', many=True, queryset=models.Resource.objects.all())
-    group = GroupSerializer()
 
     class Meta:
         model = models.Role
-        fields = ['id', 'resource', 'group']
+        fields = ['id', 'name', 'type', 'resource']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
