@@ -74,9 +74,11 @@ class Role(BaseModel):
     )
 
     id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
-    name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称', unique=True)
+    name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
     type = models.IntegerField('角色类型', choices=TYPE, help_text='角色类型{}'.format(TYPE), default=0)
-    resource = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源', null=True, blank=True)
+    resource = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源', blank=True)
+    creator = models.ForeignKey('sys.User', related_name='role_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
+    operator = models.ForeignKey('sys.User', related_name='role_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
     # data_permissions = models.ForeignKey('sys.DataPermissions', verbose_name='可访问数据', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
@@ -85,6 +87,7 @@ class Role(BaseModel):
     class Meta:
         verbose_name = '角色'
         verbose_name_plural = '角色管理'
+        unique_together = ('name', 'creator')
 
 
 class Resource(BaseModel):
