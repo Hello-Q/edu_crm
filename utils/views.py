@@ -7,6 +7,8 @@ class FalseDelModelViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         # 假删除操作
+        if instance.del_flag:
+            return Response({"detail": "资源不存在或已被删除"}, status=status.HTTP_404_NOT_FOUND)
         instance.del_flag = True
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)

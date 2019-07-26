@@ -61,14 +61,11 @@ class PermissionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PermissionSerializer
 
 
-
-
-
 class RoleViewSet(views.FalseDelModelViewSet):
     """
     角色
     """
-    queryset = models.Role.objects.all()
+    queryset = models.Role.objects.filter(del_flag__exact=False)
     serializer_class = serializers.RoleSerializer
 
 
