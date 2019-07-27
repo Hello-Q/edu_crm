@@ -30,12 +30,12 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def get_menus(self, ojb):
         user = models.User.objects.get(pk=ojb.id)
-        groups = user.groups.all()
+        roles = user.roles.filter(del_flag__exact=False)
         # print(roles)
         resource = models.Resource.objects.none()
-        for group in groups:
-            resource = resource | group.role.resource.filter(resource_type=1)
-        resource = user.resource.filter(resource_type=1) | resource
+        for role in roles:
+            resource = resource | role.resource.filter(resource_type=1)
+        resource = user.resources.filter(resource_type=1) | resource
         menu_list = []
         for menu in resource.values():
             menu_list.append(menu.get('resource_name'))
@@ -43,12 +43,12 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     def get_buttons(self, ojb):
         user = models.User.objects.get(pk=ojb.id)
-        groups = user.groups.all()
+        roles = user.roles.filter(del_flag__exact=False)
         # print(roles)
         resource = models.Resource.objects.none()
-        for group in groups:
-            resource = resource | group.role.resource.filter(resource_type=2)
-        resource = user.resource.filter(resource_type=2) | resource
+        for role in roles:
+            resource = resource | role.role.resource.filter(resource_type=2)
+        resource = user.resources.filter(resource_type=2) | resource
         button_list = []
         for menu in resource.values():
             button_list.append(menu.get('resource_name'))
