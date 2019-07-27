@@ -67,7 +67,7 @@ class FailingTypeSerializer(serializers.ModelSerializer):
 class ClueSerializer(serializers.ModelSerializer):
     channel_info = BaseChannelSerializer(source='channel', read_only=True)
     intended_course_info = eduadmin_serializers.CourseSerializer(source='intended_course', read_only=True, many=True)
-    intended_school_info = sys_serializers.DepartmentBaseSerializer(source='intended_school', read_only=True, many=True)
+    intended_school_info = sys_serializers.DepartmentBaseSerializer(source='intended_school', read_only=True)
     follow_up_person_info = sys_serializers.BaseUserSerializer(source='follow_up_person', read_only=True)
     # plan_school_name = serializers.StringRelatedField(source='plan_school')
     # plan_reception_name = serializers.StringRelatedField(source='plan_reception')

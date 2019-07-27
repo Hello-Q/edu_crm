@@ -71,7 +71,7 @@ class Clue(BaseModel):
     address = models.CharField(max_length=40, verbose_name='地址', help_text='地址', null=True, blank=True)
     consult_date = models.DateField('录入日期', help_text='录入日期',)
     intended_course = models.ManyToManyField('eduadmin.Course', related_name='clue_intended_course', verbose_name='意向课程', help_text='意向课程',  blank=True)
-    intended_school = models.ManyToManyField('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', blank=True)
+    intended_school = models.ForeignKey('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', on_delete=models.CASCADE, null=True, blank=True)
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), default=0, choices=STATUS)
     next_time = models.DateTimeField(verbose_name='下次联系时间', help_text='下次联系时间', null=True, blank=True)
