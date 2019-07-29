@@ -89,6 +89,7 @@ class ClueSerializer(serializers.ModelSerializer):
                   'failing_type', 'failing_type_info', 'failing_cause', 'Visit', 'follow_info', 'remark']
 
 
+
 class VisitSerializer(serializers.ModelSerializer):
 
     visit_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")

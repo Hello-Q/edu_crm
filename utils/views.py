@@ -21,7 +21,9 @@ class FalseDelModelViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # 自动保存创建人和更新人
-        serializer.save(operator=self.request.user, creator=self.request.user)
+        user = self.request.user
+        organization = user.department.all()[0].organization
+        serializer.save(operator=user, creator=user, organization=organization)
 
     def perform_update(self, serializer):
         serializer.save(operator=self.request.user)

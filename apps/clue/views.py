@@ -18,6 +18,8 @@ from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, Dja
 from utils.permissions import ExpandDjangoModelPermissions, DjangoObjectPermissions
 from utils import views
 from django.shortcuts import get_object_or_404
+from django.db.utils import IntegrityError
+
 
 class ChannelTypeViewSet(viewsets.ModelViewSet):
     """
@@ -47,6 +49,32 @@ class ClueViewSet(views.FalseDelModelViewSet):
     queryset = models.Clue.objects.all()
     serializer_class = serializers.ClueSerializer
     pagination_class = StandardResultsSetPagination
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            self.perform_create(serializer)
+        except Exception as e:
+            tel = request.data.get('tel')
+            clue = models.Clue.objects.get(tel=tel)
+            create_user = clue.creator.nickname
+            try:
+                follow_up_person = clue.follow_up_person.nickname
+            except AttributeError:
+                detail = {
+                    'detail': "线索中联系方式重复, 线索创建人为{0}".format(create_user)
+                }
+                return Response(detail, status=status.HTTP_400_BAD_REQUEST)
+            detail = {
+                'detail': "线索中联系方式重复, 线索创建人为{0}, 当前跟进人为{1}".format(create_user, follow_up_person)
+            }
+            return Response(detail, status=status.HTTP_400_BAD_REQUEST)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        #     return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST, headers=headers)
+
 
 
 class FollowRecordViewSet(views.FalseDelModelViewSet):

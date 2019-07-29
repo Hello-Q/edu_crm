@@ -103,6 +103,9 @@ DATABASES = {
         'NAME': 'edu_crm',
         'USER': 'root',
         'PASSWORD': 'ZYQ1994zyq..',
+        # 'OPTIONS': {
+        #     "init_command": "SET foreign_key_checks = 0;",
+        # }
     },
 }
 

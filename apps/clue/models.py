@@ -78,15 +78,10 @@ class Clue(BaseModel):
     failing_type = models.ForeignKey('clue.FailingType', on_delete=models.CASCADE, verbose_name='未成交原因类型', null=True, blank=True)
     failing_cause = models.CharField(max_length=240, verbose_name='未成交原因', null=True, blank=True)
     is_importance = models.NullBooleanField(verbose_name='重要客户', help_text='是否重要客户', null=True, blank=True)
-    # auxiliary_status = models.IntegerField('辅助状态', choices=AUXILIARY_STATUS, help_text='{}'.format(AUXILIARY_STATUS), null=True, blank=True)
-    # plan_date = models.DateField('安排日期', help_text='安排日期', null=True, blank=True)
-    # plan_time = models.TimeField('安排时间', help_text='安排时间', null=True, blank=True)
-    # plan_school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True, null=True, blank=True)
-    # plan_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.DO_NOTHING, null=True, blank=True)
-    # plan_teacher = models.ForeignKey('eduadmin.Teacher', related_name='clue_plan_teacher', verbose_name='安排老师', help_text='安排校区', on_delete=models.DO_NOTHING, null=True, blank=True)
-    # plan_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.DO_NOTHING, null=True, blank=True)
+    # 附加信息
     creator = models.ForeignKey('sys.User', related_name='clue_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='clue_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
+
 
     def __str__(self):
         return self.name
@@ -94,10 +89,10 @@ class Clue(BaseModel):
     class Meta:
         verbose_name = '线索'
         verbose_name_plural = '线索管理'
+        unique_together = ('tel', 'organization')
 
 
 class Visit(BaseModel):
-
     VISIT_TYPE = (
         (0, '约访'),
         (1, '试听'),

@@ -16,6 +16,7 @@ class Organization(BaseModel):
     contacts_tel = models.CharField(max_length=30, verbose_name='联系人电话', help_text='联系人电话')
     legal_person = models.CharField(max_length=6, null=True, blank=True,
                                     verbose_name='公司法人', help_text='公司法人')
+    organization = None
 
     def __str__(self):
         return self.org_name
@@ -37,8 +38,7 @@ class Department(BaseModel):
     type = models.IntegerField('类型', choices=TYPE)
     superior = models.ForeignKey('sys.Department', verbose_name='上级部门', on_delete=models.DO_NOTHING,
                                  null=True, blank=True)
-    organization = models.ForeignKey('sys.Organization', on_delete=models.DO_NOTHING,
-                            verbose_name='公司名称', help_text='公司id')
+
     creator = models.ForeignKey('sys.User', related_name='department_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='department_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
 
@@ -145,11 +145,11 @@ def _get_backends(return_tuples=False):
         )
     return backends
 
-class User(AbstractUser, BaseModel):
 
+class User(AbstractUser, BaseModel):
     age = models.IntegerField(verbose_name="年龄", default="1")
     tel = models.CharField('员工电话', max_length=12)
-    department = models.ManyToManyField('sys.Department', verbose_name='所属部门', help_text='部门id', blank=True)
+    department = models.ManyToManyField('sys.Department', verbose_name='所属部门', help_text='部门id',)
     head_pic = models.ImageField(upload_to='img', storage=ImageStorage(), null=True, blank=True, verbose_name='图片url')
     nickname = models.CharField(max_length=15, verbose_name='用户昵称', help_text='用户昵称')
     roles = models.ManyToManyField('Role', verbose_name='角色', blank=True)

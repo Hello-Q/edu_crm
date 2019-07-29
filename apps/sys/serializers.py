@@ -58,15 +58,10 @@ class UserInfoSerializer(serializers.ModelSerializer):
         raise_errors_on_nested_writes('update', self, validated_data)
         info = model_meta.get_field_info(instance)
 
-        # Simply set each attribute on the instance, and then save it.
-        # Note that unlike `.create()` we don't need to treat many-to-many
-        # relationships as being a special case. During updates we already
-        # have an instance pk for the relationships to be associated with.
         for attr, value in validated_data.items():
             if attr in info.relations and info.relations[attr].to_many:
                 field = getattr(instance, attr)
                 field.set(value)
-
             if attr == 'password':
                 instance.set_password(value)
 
@@ -78,10 +73,9 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
-
     class Meta:
         model = models.User
-        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'tel']
+        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'department', 'tel']
 
     def create(self, validated_data):
         raise_errors_on_nested_writes('create', self, validated_data)
@@ -119,6 +113,23 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
             for field_name, value in many_to_many.items():
                 field = getattr(instance, field_name)
                 field.set(value)
+
+        return instance
+
+    def update(self, instance, validated_data):
+        raise_errors_on_nested_writes('update', self, validated_data)
+        info = model_meta.get_field_info(instance)
+
+        for attr, value in validated_data.items():
+            if attr in info.relations and info.relations[attr].to_many:
+                field = getattr(instance, attr)
+                field.set(value)
+            if attr == 'password':
+                instance.set_password(value)
+
+            else:
+                setattr(instance, attr, value)
+        instance.save()
 
         return instance
 
