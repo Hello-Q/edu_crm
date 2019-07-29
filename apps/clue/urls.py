@@ -13,5 +13,6 @@ router.register('visit', views.VisitViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('duplicate-check', views.ClueDuplicateCheck.as_view())
     # path('schema/', schema_view),
 ]

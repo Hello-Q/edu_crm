@@ -6,6 +6,7 @@ from apps.clue import serializers
 from rest_framework import generics
 from utils.page_num import StandardResultsSetPagination
 
+from rest_framework.views import APIView
 import coreapi
 import coreschema
 from rest_framework.schemas import ManualSchema, AutoSchema
@@ -16,6 +17,7 @@ from apps.clue import filters
 from rest_framework import permissions
 from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly, DjangoModelPermissions
 from utils.permissions import ExpandDjangoModelPermissions, DjangoObjectPermissions
+from rest_framework.permissions import IsAuthenticated
 from utils import views
 from django.shortcuts import get_object_or_404
 from django.db.utils import IntegrityError
@@ -96,5 +98,26 @@ class VisitViewSet(views.FalseDelModelViewSet):
     serializer_class = serializers.VisitSerializer
 
 
+class ClueDuplicateCheck(APIView):
+    """线索查重"""
+    permission_classes = (IsAuthenticated,)
 
-
+    def get(self, request, format=None):
+        tel = request.query_params.get('tel')
+        if not tel:
+            detail = {
+                'detail': '请输入客户电话'
+            }
+            return Response(detail, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            clue = models.Clue.objects.get(tel=tel)
+        except models.Clue.DoesNotExist:
+            detail = {
+                'detail': '没有发现重复'
+            }
+            return Response(detail)
+        creator = clue.creator.nickname
+        detail = {
+            'detail': '发现重复线索，创建人为{}'.format(creator)
+        }
+        return Response(detail)
