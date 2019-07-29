@@ -76,7 +76,6 @@ class ClueViewSet(views.FalseDelModelViewSet):
         #     return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST, headers=headers)
 
 
-
 class FollowRecordViewSet(views.FalseDelModelViewSet):
     """跟进记录"""
     queryset = models.FollowRecord.objects.filter(del_flag=0)
