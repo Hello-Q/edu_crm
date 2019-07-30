@@ -46,10 +46,10 @@ class FailingType(BaseModel):
 
 class Clue(BaseModel):
     STATUS = (
-        (0, '待跟进'),
-        (1, '下次联系'),
-        (2, '成功约访'),
-        (3, '已到访'),
+        # (0, '待跟进'),
+        # (1, '待联系'),
+        # (2, '已约访'),
+        # (3, '已到访'),
         (4, '无法成交'),
         (5, '已报名'),
     )
@@ -82,14 +82,13 @@ class Clue(BaseModel):
     creator = models.ForeignKey('sys.User', related_name='clue_creator', on_delete=models.DO_NOTHING, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='clue_operator', on_delete=models.DO_NOTHING, verbose_name='更新人', null=True, blank=True)
 
-
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = '线索'
         verbose_name_plural = '线索管理'
-        unique_together = ('tel', 'organization')
+        # unique_together = ('tel', 'organization')
 
 
 class Visit(BaseModel):

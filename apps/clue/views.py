@@ -47,15 +47,7 @@ class ChannelViewSet(viewsets.ModelViewSet):
 class ClueViewSet(views.FalseDelModelViewSet):
     """
     线索资源
-    """
-    queryset = models.Clue.objects.all()
-    serializer_class = serializers.ClueSerializer
-    pagination_class = StandardResultsSetPagination
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
+            try:
             self.perform_create(serializer)
         except Exception as e:
             tel = request.data.get('tel')
@@ -72,10 +64,26 @@ class ClueViewSet(views.FalseDelModelViewSet):
                 'detail': "线索中联系方式重复, 线索创建人为{0}, 当前跟进人为{1}".format(create_user, follow_up_person)
             }
             return Response(detail, status=status.HTTP_400_BAD_REQUEST)
+    """
+    queryset = models.Clue.objects.all()
+    serializer_class = serializers.ClueSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        clue_status = request.data.get('status')
+        next_time = request.data.get('next_time')
+        print(next_time == '')
+        # if not clue_status or clue_status in ['4', '5']:
+        #     pass
+
+        if next_time != '':
+            serializer.validated_data['status'] = 2
+
+        self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-        #     return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST, headers=headers)
 
 
 class FollowRecordViewSet(views.FalseDelModelViewSet):

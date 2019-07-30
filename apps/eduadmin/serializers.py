@@ -53,3 +53,13 @@ class BaseTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Teacher
         fields = ['id', 'nickname']
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    birthday = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", allow_null=True)
+    status = serializers.ReadOnlyField()
+
+    class Meta:
+        model = models.Student
+        fields = ['id', 'name', 'tel', 'clue', 'school', 'birthday', 'sex', 'father_name', 'father_tel',
+                  'mother_name', 'mother_tel', 'status']

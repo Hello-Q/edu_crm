@@ -7,6 +7,7 @@ router.register('course', views.CourseViewSet)
 router.register('subjects', views.SubjectsViewSet)
 router.register('subjects-course', views.SubjectsCourseViewSet)
 router.register('teacher', views.TeacherViewSet)
+router.register('student', views.StudentViewSet)
 # router.register('base-teacher', views.BaseTeacher)
 
 
