@@ -106,6 +106,7 @@ class Visit(BaseModel):
     ordered_teacher = models.ForeignKey('eduadmin.Teacher', related_name='clue_plan_teacher', verbose_name='安排老师', help_text='安排校区', on_delete=models.CASCADE, null=True, blank=True)
     ordered_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.CASCADE, null=True, blank=True)
     is_visit = models.BooleanField('访问状态', )
+    revocatory_reason = models.CharField(max_length=200, verbose_name='未到访原因')
     creator = models.ForeignKey('sys.User', related_name='visit_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
     operator = models.ForeignKey('sys.User', related_name='visit_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
 
