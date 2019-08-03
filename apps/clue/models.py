@@ -100,7 +100,7 @@ class Visit(BaseModel):
     id = models.AutoField(primary_key=True, )
     clue = models.ForeignKey('clue.Clue', verbose_name='线索', on_delete=models.CASCADE)
     type = models.IntegerField('访问类型', help_text='访问类型{}'.format(VISIT_TYPE), choices=VISIT_TYPE)
-    visit_data = models.DateField('安排日期', help_text='安排日期')
+    visit_date = models.DateField('安排日期', help_text='安排日期')
     visit_time = models.TimeField('安排时间', help_text='安排时间')
     school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True)
     ordered_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.CASCADE)

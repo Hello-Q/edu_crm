@@ -92,9 +92,8 @@ class ClueSerializer(serializers.ModelSerializer):
 
 class VisitSerializer(serializers.ModelSerializer):
 
-    visit_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = models.Visit
-        fields = ['id', 'clue', 'type', 'visit_time', 'school', 'ordered_reception', 'ordered_teacher',
+        fields = ['id', 'clue', 'type', 'visit_date', 'visit_time', 'school', 'ordered_reception', 'ordered_teacher',
                   'ordered_course', 'is_visit']
