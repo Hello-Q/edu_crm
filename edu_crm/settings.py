@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.eduadmin',
     'apps.sys',
     'apps.authentication',
+    'apps.qywx',
     # 第三方app
     'rest_framework',
     # 'rest_framework.authtoken',
