@@ -166,22 +166,28 @@ class Prpcrypt(object):
         try:
             cryptor = AES.new(self.key,self.mode,self.key[:16])
             # 使用BASE64对密文进行解码，然后AES-CBC解密
+            print(169, text)
             plain_text = cryptor.decrypt(base64.b64decode(text))
+            print(base64.b64decode(text))
+            print(171, plain_text)
         except Exception as e:
             print(e)
             return ierror.WXBizMsgCrypt_DecryptAES_Error, None
         try:
-            print(174, plain_text)
-            pad = ord(plain_text.decode()[-1])
 
+            # pad = int('0' + plain_text.decode()[-1].replace(r'\x', 'x'), 16)
+            print(179, plain_text[-1])
+            pad = ord(plain_text[-1])
             # 去掉补位字符串 
             #pkcs7 = PKCS7Encoder()
             #plain_text = pkcs7.encode(plain_text)   
             # 去除16位随机字符串
             content = plain_text[16:-pad]
-            xml_len = socket.ntohl(struct.unpack("I", content[ : 4])[0])
+            xml_len = socket.ntohl(struct.unpack("I", content[: 4])[0])
+            print(185, xml_len)
             xml_content = content[4 : xml_len+4] 
             from_receiveid = content[xml_len+4:]
+            print(188, from_receiveid)
         except Exception as e:
             print(e)
             return  ierror.WXBizMsgCrypt_IllegalBuffer,None

@@ -105,6 +105,22 @@ class VisitViewSet(views.FalseDelModelViewSet):
     queryset = models.Visit.objects.filter(del_flag=0)
     serializer_class = serializers.VisitSerializer
 
+    def create(self, request, *args, **kwargs):
+        try:
+            visit_time = request.data['visit_time']
+            if visit_time:
+                request.data['visit_time'] = visit_time
+            else:
+                request.data['visit_time'] = request.data['promise_visit_time']
+        except KeyError:
+            request.data['visit_time'] = request.data['promise_visit_time']
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class ClueDuplicateCheck(APIView):
     """线索查重"""
