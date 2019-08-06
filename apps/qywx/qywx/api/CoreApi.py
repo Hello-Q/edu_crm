@@ -89,7 +89,7 @@ class CorpApi(AbstractApi) :
         self.secret = secret
         self.access_token = None
 
-    def get_access_token(self) :
+    def getAccessToken(self) :
         if self.access_token is None :
             self.refreshAccessToken()
         return self.access_token

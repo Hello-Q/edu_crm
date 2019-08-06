@@ -1,3 +1,5 @@
+DEBUG = True
+
 Conf = {
 
     # 企业的id，在管理端->"我的企业" 可以看到
@@ -23,3 +25,4 @@ Conf = {
     # "APPROVAL_APP_ID"       : 3010040,
     # "APPROVAL_APP_SECRET"   : "1vrlwItWpz_5Qkud55aImQPCvpzi51H3F2j-1OQzhYE",
 }
+"eG2mI09xtF1077x7QJl9zQ1uQDf15T5qilb3TjHdqXTTAymJGMBaFfZIro-K8sDW_ajrTf4o7TgdKwMrmI54H_7eK1sRBJLDLR9cmNIjchPmJfr5ebMgNApP7GO9AJ-cwD7OowKIbZwoZ3Rq75qrKFHGhRbZLMCL-CDq7CxJwgJ0mooef2CZt1nzedAk081bG2vyrceeB-QOiI3Wa97XNg"

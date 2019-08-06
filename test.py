@@ -1,6 +1,5 @@
-print(int('0x0c', 16))
-print(ord('\x08'))
+d = {1:1,
+     2:2}
 
-
-s = '张'
-print(s.encode().decode())
+d
+print(d)

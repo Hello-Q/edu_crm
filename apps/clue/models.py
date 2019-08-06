@@ -96,17 +96,22 @@ class Visit(BaseModel):
         (0, '约访'),
         (1, '试听'),
     )
-
+    STATUS = (
+        (0, '约访'),
+        (1, '到访'),
+        (2, '取消'),
+        (3, '改约')
+    )
     id = models.AutoField(primary_key=True, )
     clue = models.ForeignKey('clue.Clue', verbose_name='线索', on_delete=models.CASCADE)
     type = models.IntegerField('访问类型', help_text='访问类型{}'.format(VISIT_TYPE), choices=VISIT_TYPE)
     visit_time = models.DateTimeField('安排时间', help_text='安排时间')
-    school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True)
-    ordered_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.CASCADE)
+    # school = models.ForeignKey('sys.Department', related_name='clue_plan_school', verbose_name='安排校区', help_text='安排校区', on_delete=True)
+    # ordered_reception = models.ForeignKey('sys.User', related_name='clue_plan_reception', verbose_name='安排接待', help_text='安排接待', on_delete=models.CASCADE)
     ordered_teacher = models.ForeignKey('eduadmin.Teacher', related_name='clue_plan_teacher', verbose_name='安排老师', help_text='安排校区', on_delete=models.CASCADE, null=True, blank=True)
     ordered_course = models.ForeignKey('eduadmin.Course', related_name='clue_plan_course', verbose_name='安排课程', help_text='安排课程', on_delete=models.CASCADE, null=True, blank=True)
-    is_visit = models.BooleanField('访问状态', )
-    revocatory_reason = models.CharField(max_length=200, verbose_name='未到访原因')
+    status = models.IntegerField('访问状态', choices=STATUS, default=0)
+    revocatory_reason = models.CharField(max_length=200, verbose_name='未到访原因', null=True, blank=True)
     creator = models.ForeignKey('sys.User', related_name='visit_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
     operator = models.ForeignKey('sys.User', related_name='visit_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
 

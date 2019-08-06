@@ -45,3 +45,4 @@ class TeacherViewSet(viewsets.ModelViewSet):
 class StudentViewSet(FalseDelModelViewSet):
     queryset = models.Student.objects.filter(del_flag__exact=False)
     serializer_class = serializers.StudentSerializer
+

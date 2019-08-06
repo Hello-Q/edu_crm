@@ -1,7 +1,6 @@
-from django.shortcuts import render
 # Create your views here.
 
-from .callback.WXBizMsgCrypt import WXBizMsgCrypt
+from apps.qywx.qywx.callback.WXBizMsgCrypt import WXBizMsgCrypt
 from django.http import HttpResponse
 from rest_framework import permissions
 from rest_framework.views import APIView
@@ -29,7 +28,7 @@ class CallbackService(APIView):
         nonce = request.GET.get('nonce')
         echostr = request.body
         data = self.msg_crypt.DecryptMsg(echostr, msg_signature, timestamp, nonce)
-        # print(data)
+        print(data[1].decode())
         return HttpResponse(data)
 
 
@@ -40,3 +39,4 @@ class UpdateExternalUser(APIView):
 
     def get(self, request, format=None):
         pass
+
