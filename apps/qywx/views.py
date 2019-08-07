@@ -3,7 +3,12 @@
 from apps.qywx.qywx.callback.WXBizMsgCrypt import WXBizMsgCrypt
 from django.http import HttpResponse
 from rest_framework import permissions
+from rest_framework.views import Response
 from rest_framework.views import APIView
+from apps.qywx.qywx.api.CoreApi import CorpApi, CORP_API_TYPE
+from apps.qywx.qywx.api.Conf import *
+from apps.qywx.qywx.api.AbstractApi import ApiException
+api = CorpApi(Conf['CORP_ID'], Conf['CUSTOMER_CONTACT'])
 
 
 class CallbackService(APIView):
@@ -35,8 +40,19 @@ class CallbackService(APIView):
 base_url = 'https://qyapi.weixin.qq.com/'
 
 
-class UpdateExternalUser(APIView):
+class GetFollowUseList(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self, request, fromat=None):
+        try:
+            ##
+            response = api.httpCall(
+                CORP_API_TYPE['GET_FOLLOW_USER_LIST'],
+                )
+            print(response)
+        except ApiException as e :
+            response = (e.errCode, e.errMsg)
 
-    def get(self, request, format=None):
-        pass
+            ##
 
+
+        return Response(response['follow_user'])

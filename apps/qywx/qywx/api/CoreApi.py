@@ -80,6 +80,8 @@ CORP_API_TYPE = {
         'APP_CHAT_SEND'    : ['/cgi-bin/appchat/send?access_token=ACCESS_TOKEN', 'POST'],
 
         'MINIPROGRAM_CODE_TO_SESSION_KEY' : ['/cgi-bin/miniprogram/jscode2session?access_token=ACCESS_TOKEN', 'GET'],
+
+        'GET_FOLLOW_USER_LIST': ['/cgi-bin/externalcontact/get_follow_user_list?access_token=ACCESS_TOKEN', 'GET'],
 }
 
 

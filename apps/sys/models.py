@@ -147,6 +147,7 @@ def _get_backends(return_tuples=False):
 
 
 class User(AbstractUser, BaseModel):
+    qywxid = models.CharField(max_length=20, verbose_name='企业微信userid',)
     age = models.IntegerField(verbose_name="年龄", default="1")
     tel = models.CharField('员工电话', max_length=12)
     department = models.ManyToManyField('sys.Department', verbose_name='所属部门', help_text='部门id',)

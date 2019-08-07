@@ -48,6 +48,7 @@ class VisitSerializer(serializers.ModelSerializer):
 class StrVisitSerializer(serializers.ModelSerializer):
     ordered_teacher_name = serializers.StringRelatedField(source='ordered_teacher', read_only=True)
     ordered_course_name = serializers.StringRelatedField(source='ordered_course', read_only=True)
+    visit_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = models.Visit

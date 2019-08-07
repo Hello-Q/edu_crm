@@ -6,5 +6,6 @@ from . import views
 
 
 urlpatterns = [
-    path('verify_url/', views.CallbackService.as_view()),
+    path('verify-url/', views.CallbackService.as_view()),
+    path('get-follow-use-list/', views.GetFollowUseList.as_view()),
 ]
