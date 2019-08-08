@@ -192,7 +192,7 @@ class VisitViewSet(views.FalseDelModelViewSet):
             else:
                 request.data['visit_time'] = request.data['promise_visit_time']
         except KeyError:
-            request.data['visit_time'] = request.data['promise_visit_time']
+            pass
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         # 判断数据变化
         serializer = self.change_in_data(serializer, instance, partial)
