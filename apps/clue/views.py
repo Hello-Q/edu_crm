@@ -59,12 +59,25 @@ class ClueViewSet(views.FalseDelModelViewSet):
     serializer_class = serializers.ClueSerializer
     pagination_class = StandardResultsSetPagination
 
+
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        print(queryset.filter(creator=request.user))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         clue_status = request.data.get('status')
         next_time = request.data.get('next_time')
-        print(next_time == '')
         # if not clue_status or clue_status in ['4', '5']:
         #     pass
 
@@ -81,13 +94,6 @@ class FollowRecordViewSet(views.FalseDelModelViewSet):
     queryset = models.FollowRecord.objects.filter(del_flag=0)
     serializer_class = serializers.FollowRecordSerializer
 
-    def perform_create(self, serializer):
-        # 获取线索状态并保存
-        clue_id = serializer.validated_data['clue'].id
-        status_id = models.Clue.objects.get(id=clue_id).status
-        serializer.validated_data['clue_status'] = models.Clue.STATUS[status_id][1]
-        # 自动保存创建人和更新人
-        serializer.save(operator=self.request.user, creator=self.request.user)
 
 
 class VisitViewSet(views.FalseDelModelViewSet):

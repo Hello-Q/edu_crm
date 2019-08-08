@@ -88,6 +88,7 @@ class Clue(BaseModel):
     class Meta:
         verbose_name = '线索'
         verbose_name_plural = '线索管理'
+        ordering = ['-create_time']
         # unique_together = ('tel', 'organization')
 
 
@@ -119,7 +120,7 @@ class Visit(BaseModel):
 class FollowRecord(BaseModel):
     id = models.AutoField(primary_key=True)
     clue = models.ForeignKey('clue.Clue', on_delete=models.CASCADE, verbose_name='关联线索')
-    clue_status = models.CharField(max_length=240)
+    # clue_status = models.CharField(max_length=240)
     follow_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     content = models.TextField(max_length=1000)
     creator = models.ForeignKey('sys.User', related_name='follow_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
