@@ -82,6 +82,8 @@ CORP_API_TYPE = {
         'MINIPROGRAM_CODE_TO_SESSION_KEY' : ['/cgi-bin/miniprogram/jscode2session?access_token=ACCESS_TOKEN', 'GET'],
 
         'GET_FOLLOW_USER_LIST': ['/cgi-bin/externalcontact/get_follow_user_list?access_token=ACCESS_TOKEN', 'GET'],
+        'GET_EXTERNAL_CONTACT_LIST': ['/cgi-bin/externalcontact/list?access_token=ACCESS_TOKEN', 'GET'],
+        'GET_EXTERNAL_CONTACT_DETAIL': ['/cgi-bin/externalcontact/get?access_token=ACCESS_TOKEN', 'GET'],
 }
 
 

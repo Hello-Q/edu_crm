@@ -179,6 +179,14 @@ class VisitViewSet(views.FalseDelModelViewSet):
                 'detail': '该访问已结束,无法再次修改'
             }
             return Response(detail, status=status.HTTP_404_NOT_FOUND)
+        try:
+            visit_time = request.data['visit_time']
+            if visit_time:
+                request.data['visit_time'] = visit_time
+            else:
+                request.data['visit_time'] = request.data['promise_visit_time']
+        except KeyError:
+            request.data['visit_time'] = request.data['promise_visit_time']
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         # 判断数据变化
         serializer = self.change_in_data(serializer, instance, partial)

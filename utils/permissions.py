@@ -40,6 +40,5 @@ class ExpandDjangoModelPermissions(DjangoModelPermissions):
 
         queryset = self._queryset(view)
         perms = self.get_required_permissions(request.method, queryset.model)
-        # print(perms)
-        # print(request.user.has_perms(perms))
+
         return request.user.has_perms(perms)
