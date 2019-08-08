@@ -58,7 +58,7 @@ class StrVisitSerializer(serializers.ModelSerializer):
 
 class FollowRecordSerializer(serializers.ModelSerializer):
     creator_name = serializers.StringRelatedField(source='creator', read_only=True)
-    follow_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", allow_null=True)
+    follow_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     clue_status = serializers.ReadOnlyField()
 
     class Meta:
