@@ -117,6 +117,10 @@ class Visit(BaseModel):
     operator = models.ForeignKey('sys.User', related_name='visit_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
 
 
+    class Meta:
+        ordering = ['-create_time']
+
+
 class FollowRecord(BaseModel):
     id = models.AutoField(primary_key=True)
     clue = models.ForeignKey('clue.Clue', on_delete=models.CASCADE, verbose_name='关联线索')

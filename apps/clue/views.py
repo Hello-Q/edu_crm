@@ -11,7 +11,7 @@ from apps.sys.models import Department, User
 from utils import views
 from utils.page_num import StandardResultsSetPagination
 from utils.permissions import ExpandDjangoModelPermissions
-
+from . import filters
 
 class ChannelTypeViewSet(viewsets.ModelViewSet):
     """
@@ -58,12 +58,11 @@ class ClueViewSet(views.FalseDelModelViewSet):
     queryset = models.Clue.objects.all()
     serializer_class = serializers.ClueSerializer
     pagination_class = StandardResultsSetPagination
-
-
+    filter_backends = (DjangoFilterBackend, )
+    filter_class = filters.ClueFilters
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        print(queryset.filter(creator=request.user))
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -71,7 +70,6 @@ class ClueViewSet(views.FalseDelModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
