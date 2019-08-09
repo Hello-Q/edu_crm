@@ -79,9 +79,6 @@ class ClueViewSet(views.FalseDelModelViewSet):
         # if not clue_status or clue_status in ['4', '5']:
         #     pass
 
-        if next_time != '':
-            serializer.validated_data['status'] = 2
-
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

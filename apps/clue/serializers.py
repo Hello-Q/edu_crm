@@ -92,9 +92,10 @@ class ClueSerializer(serializers.ModelSerializer):
         model = models.Clue
         # exclude = HIDE_FIELD
 
-        fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'is_importance', 'consult_date',
-                  'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info',
-                      'follow_up_person', 'follow_up_person_info', 'creator', 'status', 'next_time',
+        fields = ['id', 'channel', 'channel_info', 'name', 'tel', 'age', 'sex', 'address', 'is_importance',
+                  'consult_date', 'intended_course', 'intended_course_info', 'intended_school', 'intended_school_info',
+                  'follow_up_person', 'follow_up_person_info', 'creator', 'status', 'next_time', 'enroll_course',
+                  'enroll_date', 'enroll_sum', 'class_hour',
                   'failing_type', 'failing_type_info', 'failing_cause', 'Visit', 'follow_info', 'remark']
 
 
