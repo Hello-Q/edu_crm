@@ -25,9 +25,9 @@ class ChannelTypeViewSet(views.FalseDelModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        data_permission = self.data_permission_class()
-        data_permission = data_permission.get_data_permissions(request.method, queryset.model)
-        print(data_permission)
+        # data_permission = self.data_permission_class()
+        # data_permission = data_permission.get_data_permissions(request.method, queryset.model)
+        # print(data_permission)
 
 
 
