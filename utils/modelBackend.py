@@ -12,7 +12,4 @@ class MyModelBackend(ModelBackend):
         # user_groups_field = get_user_model()._meta.get_field('groups')
         user_groups_field = get_user_model()._meta.get_field('roles')
         user_groups_query = 'resource__role__%s' % user_groups_field.related_query_name()
-        # print('_get_group_permissions', user_groups_query)
-        # print({user_groups_query: user_obj})
-        # print(Permission.objects.filter(**{user_groups_query: user_obj}))
         return Permission.objects.filter(**{user_groups_query: user_obj})

@@ -7,13 +7,13 @@ from rest_framework.views import APIView
 import copy
 from apps.clue import models, serializers
 from apps.eduadmin.models import Teacher, Course
-from apps.sys.models import Department, User
 from utils import views
 from utils.page_num import StandardResultsSetPagination
-from utils.permissions import ExpandDjangoModelPermissions
+from utils.permissions import ExpandDjangoModelPermissions, DataPermissions
 from . import filters
 
-class ChannelTypeViewSet(viewsets.ModelViewSet):
+
+class ChannelTypeViewSet(views.FalseDelModelViewSet):
     """
     渠道分类
     """
@@ -21,6 +21,23 @@ class ChannelTypeViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ChannelTypeSerializer
     pagination_class = None
     permission_classes = (ExpandDjangoModelPermissions,)
+    data_permission_class = DataPermissions
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        data_permission = self.data_permission_class()
+        data_permission = data_permission.get_data_permissions(request.method, queryset.model)
+        print(data_permission)
+
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ChannelViewSet(viewsets.ModelViewSet):
@@ -61,23 +78,9 @@ class ClueViewSet(views.FalseDelModelViewSet):
     filter_backends = (DjangoFilterBackend, )
     filter_class = filters.ClueFilters
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        clue_status = request.data.get('status')
-        next_time = request.data.get('next_time')
-        # if not clue_status or clue_status in ['4', '5']:
-        #     pass
 
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)

@@ -76,11 +76,10 @@ class Clue(BaseModel):
     status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), default=0, choices=STATUS)
     next_time = models.DateTimeField(verbose_name='下次联系时间', help_text='下次联系时间', null=True, blank=True)
     """报名信息"""
-    enroll_course = models.ForeignKey('eduadmin.Course', verbose_name='报名课程', on_delete=models.CASCADE, null=True, blank=True)
+    enroll_course = models.ManyToManyField('eduadmin.Course', verbose_name='报名课程', blank=True)
     enroll_date = models.DateField(verbose_name='报名日期', null=True, blank=True)
     enroll_sum = models.FloatField(verbose_name='报名价格', null=True, blank=True)
     class_hour = models.IntegerField(verbose_name='报名课时', null=True, blank=True)
-
     failing_type = models.ForeignKey('clue.FailingType', on_delete=models.CASCADE, verbose_name='未成交原因类型', null=True, blank=True)
     failing_cause = models.CharField(max_length=240, verbose_name='未成交原因', null=True, blank=True)
     is_importance = models.NullBooleanField(verbose_name='重要客户', help_text='是否重要客户', null=True, blank=True)
@@ -96,7 +95,9 @@ class Clue(BaseModel):
         verbose_name_plural = '线索管理'
         ordering = ['-create_time']
         # unique_together = ('tel', 'organization')
-
+        permissions = (
+            ('Can view clue', 'view_线索'),
+        )
 
 class Visit(BaseModel):
     VISIT_TYPE = (

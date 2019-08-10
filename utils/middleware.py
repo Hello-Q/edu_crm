@@ -62,7 +62,6 @@ class TokenToUser(MiddlewareMixin):
             return None
         request.user = user
         return None
-from apps.sys.models import Role, DataPermissions
 
 class DataPermissionsMiddleware(MiddlewareMixin):
 

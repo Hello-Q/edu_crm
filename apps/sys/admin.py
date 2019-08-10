@@ -9,6 +9,9 @@ from django.utils.translation import gettext, gettext_lazy as _
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ['org_id', 'org_name', 'org_add', 'contacts_man', 'contacts_tel', 'legal_person']
 
+@admin.register(models.Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'type', 'creator', 'operator']
 
 # @admin.register(models.Department)
 # class DepartmentAdmin(admin.ModelAdmin):
@@ -21,8 +24,8 @@ class UserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
-                                       'groups', 'user_permissions')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',)}),
+                                       # 'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (_('其他信息'), {'fields': ('age', 'tel', 'department', 'head_pic', 'nickname', 'role', 'resource')})
+        (_('其他信息'), {'fields': ('age', 'tel', 'department', 'head_pic', 'nickname', 'roles', 'resources')})
     )

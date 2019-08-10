@@ -86,7 +86,8 @@ class ClueSerializer(serializers.ModelSerializer):
     follow_info = FollowRecordSerializer(source='followrecord_set', many=True, read_only=True)
     next_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", allow_null=True)
     failing_type_info = FailingTypeSerializer(source='failing_type', read_only=True)
-    enroll_course_name = serializers.StringRelatedField(source='enroll_course', read_only=True)
+    enroll_course_name = serializers.StringRelatedField(source='enroll_course', read_only=True, many=True)
+
 
     class Meta:
         model = models.Clue
