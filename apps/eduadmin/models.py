@@ -3,16 +3,6 @@ from django.db import models
 from utils.base_modle import BaseModel
 
 
-
-# class CourseType(models.Model):
-#     cou_type_id = models.AutoField(primary_key=True)
-#     name = models.CharField(max_length=15, verbose_name='课程类型', help_text='课程类型')
-#
-#     class Meta:
-#         verbose_name = '课程类型'
-#         verbose_name_plural = '课程类型'
-
-
 class Subjects(BaseModel):
     id = models.AutoField(primary_key=True, verbose_name='科系编号', help_text='科系id')
     name = models.CharField(max_length=10, verbose_name='科系名称', help_text='科系名称')
@@ -47,7 +37,7 @@ class Course(BaseModel):
 class Teacher(BaseModel):
     id = models.AutoField(primary_key=True, verbose_name='教师编号', help_text='教师id')
     user = models.OneToOneField('sys.User', verbose_name='对应员工', help_text='员工id',
-                             on_delete=models.DO_NOTHING)
+                             on_delete=models.CASCADE)
     course = models.ManyToManyField('eduadmin.Course', verbose_name='所授课程')
 
     def __str__(self):

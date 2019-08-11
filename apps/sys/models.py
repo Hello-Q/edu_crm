@@ -78,7 +78,7 @@ class Role(BaseModel):
         (30, '公司数据'),
     )
     id = models.AutoField(primary_key=True, verbose_name='角色编号', help_text='角色id')
-    name = models.CharField(max_length=10, verbose_name='角色名称', help_text='角色名称')
+    name = models.CharField(max_length=50, verbose_name='角色名称', help_text='角色名称')
     type = models.IntegerField('角色类型', choices=TYPE, help_text='角色类型{}'.format(TYPE), default=0)
     resources = models.ManyToManyField('sys.Resource', verbose_name='可访问资源', help_text='可访问资源', blank=True)
     creator = models.ForeignKey('sys.User', related_name='role_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')

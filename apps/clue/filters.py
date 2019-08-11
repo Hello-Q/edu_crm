@@ -21,16 +21,23 @@ class ClueFilters(filters.FilterSet):
     consult_date_max = filters.DateFilter(field_name='consult_date', lookup_expr='lte')
     next_time_min = filters.DateFilter(field_name='next_time', lookup_expr='gte')
     next_time_max = filters.DateFilter(field_name='next_time', lookup_expr='lte')
+    status = filters.CharFilter(method='get_status')
 
     def get_channel_type(self, queryset, name, value):
         queryset = queryset.filter(channel__type=value)
         return queryset
 
     def get_channel(self, queryset, name, value):
-        channel_lsit = list(value)
-        queryset = queryset.filter(channel__in=channel_lsit)
+        queryset = queryset.filter(channel=value)
+        return queryset
+
+    def get_status(self, queryset, name, value):
+        status_list = value.split(',')
+
+        print(status_list)
+        queryset = queryset.filter(status__in=status_list)
         return queryset
 
     class Meta:
         model = models.Clue
-        fields = ['intended_school', 'status', 'is_importance']
+        fields = ['intended_school', 'is_importance']

@@ -9,7 +9,7 @@ from apps.clue import models, serializers
 from apps.eduadmin.models import Teacher, Course
 from utils import views
 from utils.page_num import StandardResultsSetPagination
-from utils.permissions import ExpandDjangoModelPermissions, DataPermissions
+from utils.permissions import ExpandDjangoModelPermissions
 from . import filters
 
 
@@ -21,23 +21,6 @@ class ChannelTypeViewSet(views.FalseDelModelViewSet):
     serializer_class = serializers.ChannelTypeSerializer
     pagination_class = None
     permission_classes = (ExpandDjangoModelPermissions,)
-    data_permission_class = DataPermissions
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        # data_permission = self.data_permission_class()
-        # data_permission = data_permission.get_data_permissions(request.method, queryset.model)
-        # print(data_permission)
-
-
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
 
 class ChannelViewSet(viewsets.ModelViewSet):

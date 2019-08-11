@@ -1,11 +1,10 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-
-
+from .permissions import DataPermission
 
 
 class FalseDelModelViewSet(viewsets.ModelViewSet):
-
+    data_permission_class = DataPermission
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -18,7 +17,11 @@ class FalseDelModelViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         # 过滤删除以及不符合数据权限数据
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset = self.filter_queryset(self.get_queryset()).filter(del_flag=False)
+        # if not request.user.is_superuser:
+        #     data_permission = self.data_permission_class()
+        #     data_permission = data_permission.get_perm_queryset(request.method, queryset.model, request, queryset)
+        #     print(data_permission)
 
         page = self.paginate_queryset(queryset)
         if page is not None:

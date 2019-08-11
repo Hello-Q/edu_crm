@@ -5,7 +5,8 @@ from django.http.response import Http404
 from django.contrib.auth.models import Permission
 from apps.sys.models import Role
 
-class DataPermissions(object):
+
+class DataPermission(object):
     perms_map = {
         'GET': 'view_%(model_name)s',
         'OPTIONS': [],
@@ -17,7 +18,7 @@ class DataPermissions(object):
     }
     authenticated_users_only = True
 
-    def get_data_permissions(self, method, model_cls):
+    def get_data_permission(self, method, model_cls):
         """获取权限名称"""
         kwargs = {
             'model_name': model_cls._meta.model_name
@@ -26,9 +27,21 @@ class DataPermissions(object):
         # 获取权限
         perm = Permission.objects.get(codename__exact=perm_codename)
         # 获取角色
+        print(perm)
         roles = set(Role.objects.filter(resources__permissions=perm))
         data_permission = max([role.data_permission for role in roles])
         return data_permission
+
+    def get_perm_queryset(self, method, model_cls, request, queryset):
+        data_permission = self.get_data_permission(method, model_cls)
+        if data_permission == 0:
+            queryset = queryset.filter(creator=request.user)
+        elif data_permission == 10:
+            department = request.user.department
+            queryset = queryset.filter(creator__deparment_creator=department)
+        return queryset
+
+
 
 
 class ExpandDjangoModelPermissions(DjangoModelPermissions):
