@@ -93,10 +93,9 @@ class Clue(BaseModel):
     class Meta:
         verbose_name = '线索'
         verbose_name_plural = '线索管理'
-        ordering = ['-create_time']
-        # unique_together = ('tel', 'organization')
+        ordering = ['is_importance', '-update_time']
         permissions = (
-            ('Can view clue', 'view_线索'),
+            ('view_clue', 'Can view 线索'),
         )
 
 class Visit(BaseModel):

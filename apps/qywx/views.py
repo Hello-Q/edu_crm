@@ -63,7 +63,7 @@ class FollowUseList(APIView):
         """请求qywx API 获取跟进人列表"""
         response = request_api(api_app_CUSTOMER_CONTACT, CORP_API_TYPE['GET_FOLLOW_USER_LIST'])
         if response.get('errcode') == 0:
-            response['errmsg'] = '企业共配置{}位员工可添加外部联系人。'.format(len(response['follow_user']))
+            response['msg'] = '企业共配置{}位员工可添加外部联系人。'.format(len(response['follow_user']))
             return response
         else:
             return response
@@ -85,7 +85,7 @@ class ExternalContactList(APIView):
         else:
             success = 0
             failed = 0
-            failed_user = list()
+            failed_users = list()
             external_userid = list()
             data = dict()
             for follow_user in follow_user_data['follow_user']:
@@ -97,11 +97,11 @@ class ExternalContactList(APIView):
                         external_userid.append(external_user)
                 else:
                     failed += 1
-                    failed_user.append({'userid': follow_user, 'errcode': response['errcode']})
+                    failed_users.append({'userid': follow_user, 'errcode': response['errcode'], 'checking_url':
+                                        'https://open.work.weixin.qq.com/devtool/query?e={0}'.format(response['errcode'])})
             data['errcode'] = 0
             data['errmsg'] = follow_user_data['errmsg'] + '成功为{0}位员工获取了客户, 失败{1}位,拉取客户数{2}位,'.format(success, failed, len(external_userid))
-            # data['success_user'] =
-            data['failed_user'] = failed_user
+            data['failed_users'] = failed_users
             data['external_userid'] = external_userid
             return data
 
@@ -125,6 +125,7 @@ class ExternalContactDetail(APIView):
             external_contact_list.append(response)
             success += 1
         data['msg'] = external_contact_data['errmsg']
+        data['failed_users'] = external_contact_data['failed_users']
         data['external_contact_list'] = external_contact_list
         return data
 
@@ -135,5 +136,5 @@ class ExternalContactDetail(APIView):
     def get(self, request, format=None):
         print(request.user.qywxid)
         data = self.get_data()
-        self.create(data)
+        # self.create(data)
         return Response(data)

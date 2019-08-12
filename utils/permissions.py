@@ -16,9 +16,16 @@ class DataPermission(object):
         'PATCH': ['%(app_label)s.change_%(model_name)s'],
         'DELETE': ['%(app_label)s.delete_%(model_name)s'],
     }
+
+    data_filter_map = [
+        'clue',
+    ]
     authenticated_users_only = True
 
     def get_data_permission(self, method, model_cls):
+        # 无需校验数据,直接返回公司数据权限
+        if not model_cls._meta.model_name in self.data_filter_map:
+            return 30
         """获取权限名称"""
         kwargs = {
             'model_name': model_cls._meta.model_name
@@ -27,7 +34,6 @@ class DataPermission(object):
         # 获取权限
         perm = Permission.objects.get(codename__exact=perm_codename)
         # 获取角色
-        print(perm)
         roles = set(Role.objects.filter(resources__permissions=perm))
         data_permission = max([role.data_permission for role in roles])
         return data_permission
@@ -37,10 +43,12 @@ class DataPermission(object):
         if data_permission == 0:
             queryset = queryset.filter(creator=request.user)
         elif data_permission == 10:
-            department = request.user.department
-            queryset = queryset.filter(creator__deparment_creator=department)
+            department = request.user.department.all()
+            queryset = set(queryset.filter(creator__department__in=department))
+        elif data_permission == 30:
+            organization = request.user.organization
+            queryset = queryset.filter(organization=organization)
         return queryset
-
 
 
 
