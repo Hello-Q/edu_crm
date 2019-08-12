@@ -44,7 +44,8 @@ class DataPermission(object):
             queryset = queryset.filter(creator=request.user)
         elif data_permission == 10:
             department = request.user.department.all()
-            queryset = set(queryset.filter(creator__department__in=department))
+            print(queryset.filter(creator__department__in=department))
+            queryset = queryset.filter(creator__department__in=department).distinct()
         elif data_permission == 30:
             organization = request.user.organization
             queryset = queryset.filter(organization=organization)
