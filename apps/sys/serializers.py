@@ -18,8 +18,8 @@ class RoleSerializer(WritableNestedModelSerializer):
 
 class UserInfoSerializer(serializers.ModelSerializer):
 
-    roles = serializers.PrimaryKeyRelatedField(source='groups', many=True, read_only=True)
-    roles_name = serializers.StringRelatedField(source='groups', many=True, read_only=True)
+    roles = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    roles_name = serializers.StringRelatedField(source='roles', many=True, read_only=True)
     department_name = serializers.StringRelatedField(source='department', many=True, read_only=True)
     menus = serializers.SerializerMethodField()
     buttons = serializers.SerializerMethodField()
