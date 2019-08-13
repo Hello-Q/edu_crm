@@ -7,22 +7,13 @@ from apps.sys.models import Role
 
 
 class DataPermission(object):
-    perms_map = {
-        'GET': 'view_%(model_name)s',
-        'OPTIONS': [],
-        'HEAD': [],
-        'POST': ['%(app_label)s.add_%(model_name)s'],
-        'PUT': ['%(app_label)s.change_%(model_name)s'],
-        'PATCH': ['%(app_label)s.change_%(model_name)s'],
-        'DELETE': ['%(app_label)s.delete_%(model_name)s'],
-    }
 
     data_filter_map = [
         'clue',
     ]
     authenticated_users_only = True
 
-    def get_data_permission(self, method, model_cls):
+    def get_data_permission(self, model_cls):
         # 无需校验数据,直接返回公司数据权限
         if not model_cls._meta.model_name in self.data_filter_map:
             return 30
@@ -30,7 +21,7 @@ class DataPermission(object):
         kwargs = {
             'model_name': model_cls._meta.model_name
         }
-        perm_codename = self.perms_map[method] % kwargs
+        perm_codename = 'view_%(model_name)s' % kwargs
         # 获取权限
         perm = Permission.objects.get(codename__exact=perm_codename)
         # 获取角色
@@ -38,19 +29,18 @@ class DataPermission(object):
         data_permission = max([role.data_permission for role in roles])
         return data_permission
 
-    def get_perm_queryset(self, method, model_cls, request, queryset):
-        data_permission = self.get_data_permission(method, model_cls)
+    def get_perm_queryset(self, model_cls, request, queryset):
+        """获取符合用户权限的queryset"""
+        data_permission = self.get_data_permission(model_cls)
         if data_permission == 0:
             queryset = queryset.filter(creator=request.user)
         elif data_permission == 10:
             department = request.user.department.all()
-            print(queryset.filter(creator__department__in=department))
             queryset = queryset.filter(creator__department__in=department).distinct()
         elif data_permission == 30:
             organization = request.user.organization
             queryset = queryset.filter(organization=organization)
         return queryset
-
 
 
 class ExpandDjangoModelPermissions(DjangoModelPermissions):

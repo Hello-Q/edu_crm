@@ -3,11 +3,17 @@
 from apps.qywx.qywx.callback.WXBizMsgCrypt import WXBizMsgCrypt
 from django.http import HttpResponse
 from rest_framework import permissions
-from rest_framework.views import Response
+from rest_framework.views import Response, status
 from rest_framework.views import APIView
 from apps.qywx.qywx.api.CoreApi import CorpApi, CORP_API_TYPE
 from apps.qywx.qywx.api.Conf import *
 from apps.qywx.qywx.api.AbstractApi import ApiException
+from utils.permissions import DataPermission
+from apps.clue.models import Clue
+from apps.sys.models import User
+import time
+
+# 客户联系应用的secret
 api_app_CUSTOMER_CONTACT = CorpApi(Conf['CORP_ID'], Conf['CUSTOMER_CONTACT'])
 
 
@@ -33,7 +39,6 @@ class CallbackService(APIView):
         nonce = request.GET.get('nonce')
         echostr = request.body
         data = self.msg_crypt.DecryptMsg(echostr, msg_signature, timestamp, nonce)
-        print(data[1].decode())
         return HttpResponse(data)
 
 
@@ -56,7 +61,7 @@ def request_api(api_app_type, corp_api_type, args=None):
 
 
 class FollowUseList(APIView):
-
+    """获取微信跟进人列表"""
     permission_classes = (permissions.IsAuthenticated,)
     @classmethod
     def get_data(cls):
@@ -90,7 +95,7 @@ class ExternalContactList(APIView):
             data = dict()
             for follow_user in follow_user_data['follow_user']:
                 response = request_api(api_app_CUSTOMER_CONTACT, CORP_API_TYPE['GET_EXTERNAL_CONTACT_LIST'], {'userid': follow_user})
-                print(follow_user)
+
                 if response.get('errcode') == 0:
                     success += 1
                     for external_user in response['external_userid']:
@@ -110,8 +115,9 @@ class ExternalContactList(APIView):
         return Response(data)
 
 
-class ExternalContactDetail(APIView):
+class SyncContacts(APIView):
     permission_classes = (permissions.IsAuthenticated, )
+    data_permission = DataPermission
 
     def get_data(self):
         external_contact_data = ExternalContactList.get_data()
@@ -133,8 +139,94 @@ class ExternalContactDetail(APIView):
         for external_contact in data['external_contact_list']:
             pass
 
+    def has_permissions(self, request):
+        """
+        校验用户权限
+        :param request:
+        :return:
+        """
+        perms = ['clue.view_clue', 'clue.add_clue']
+        return request.user.has_perms(perms)
+
+
+    def get_follow_users_qywxid(self, user):
+        """
+        根据数据权限,返回请求用户个人或部门内人或公司内人qywxid列表
+        :param user: 请求用户
+        :return: 相关用户列表qywxid列表
+        """
+        data_perm = self.data_permission().get_data_permission(Clue)
+        if data_perm == 10:
+            follow_users = User.objects.filter(department__in=user.department.all()).distinct()
+        elif data_perm == 30:
+            follow_users = User.objects.filter(organization__exact=user.organization)
+        else:
+            follow_users = [user]
+        return follow_users.values('qywxid')
+
+    def get_external_userids(self, user_qywxids):
+        """
+        :param user_qywxids: 跟进人企业微信id列表
+        :return: 外部联系人userid
+        """
+        external_userids = list()
+        for user_qywxid in user_qywxids:
+            if user_qywxid['qywxid']:
+                response = request_api(api_app_CUSTOMER_CONTACT, CORP_API_TYPE['GET_EXTERNAL_CONTACT_LIST'],
+                                       {'userid': user_qywxid['qywxid']})
+                if response['errcode'] == 0:
+                    external_userids += response['external_userid']
+
+        return external_userids
+
+    def get_external_user_detail(self, external_userids):
+        for external_userid in external_userids:
+            response = request_api(api_app_CUSTOMER_CONTACT, CORP_API_TYPE['GET_EXTERNAL_CONTACT_DETAIL'],
+                                   {'external_userid': external_userid})
+            yield response
+
+    def save_external_user_detail(self, external_user_detail):
+        data_list = list()
+        for external_user in external_user_detail:
+            if external_user['errcode'] == 0:
+                print(external_user)
+                """"外部联系人信息"""
+                external_contact = external_user['external_contact']
+                external_userid = external_contact['external_userid']  # 外部联系人id
+                """跟进人填写信息"""
+                follow_user = external_user['follow_user'][0]
+
+                userid = follow_user['userid']  # 跟进人企业微信id
+
+                customer_name = follow_user['remark']  # 客户备注名称
+                remark = follow_user['description']  # 客户备注内容
+                tel = follow_user['remark_mobiles'] # 客户电话
+                if tel:
+                    tel = tel[0]
+                create_time = follow_user['createtime']
+                create_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(create_time))
+                external_user_name = external_contact['name']
+                data = {
+                    'external_userid': external_userid,
+                    'name': customer_name,
+                    'tel': tel,
+                    'create_time': create_time,
+                    'update_time': create_time,
+
+
+                }
+
     def get(self, request, format=None):
-        print(request.user.qywxid)
-        data = self.get_data()
-        # self.create(data)
-        return Response(data)
+        """要求具有线索查看, 新增权限"""
+        if not self.has_permissions(request):
+            data = {
+                'detail': '您没有执行该操作的权限。'
+            }
+            return Response(data, status=status.HTTP_403_FORBIDDEN)
+
+        follow_users = self.get_follow_users_qywxid(request.user)
+        external_userids = self.get_external_userids(follow_users)
+        external_user_detail = self.get_external_user_detail(external_userids)
+        data = self.save_external_user_detail(external_user_detail)
+
+        return Response({1: external_user_detail})

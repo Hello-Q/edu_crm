@@ -20,7 +20,7 @@ class FalseDelModelViewSet(viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset()).filter(del_flag=False)
         if not request.user.is_superuser:
             data_permission = self.data_permission_class()
-            queryset = data_permission.get_perm_queryset(request.method, queryset.model, request, queryset)
+            queryset = data_permission.get_perm_queryset(queryset.model, request, queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

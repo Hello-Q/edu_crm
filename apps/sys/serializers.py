@@ -32,12 +32,12 @@ class UserInfoSerializer(serializers.ModelSerializer):
         user = models.User.objects.get(pk=ojb.id)
         roles = user.roles.filter(del_flag__exact=False)
         # print(roles)
-        resource = models.Resource.objects.none()
+        resources = models.Resource.objects.none()
         for role in roles:
-            resource = resource | role.resource.filter(resource_type=1)
-        resource = user.resources.filter(resource_type=1) | resource
+            resources = resources | role.resources.filter(resource_type=1)
+        resources = user.resources.filter(resource_type=1) | resources
         menu_list = []
-        for menu in resource.values():
+        for menu in resources.values():
             menu_list.append(menu.get('resource_name'))
         return menu_list
 
@@ -45,12 +45,12 @@ class UserInfoSerializer(serializers.ModelSerializer):
         user = models.User.objects.get(pk=ojb.id)
         roles = user.roles.filter(del_flag__exact=False)
         # print(roles)
-        resource = models.Resource.objects.none()
+        resources = models.Resource.objects.none()
         for role in roles:
-            resource = resource | role.role.resource.filter(resource_type=2)
-        resource = user.resources.filter(resource_type=2) | resource
+            resources = resources | role.resources.filter(resource_type=2)
+        resources = user.resources.filter(resource_type=2) | resources
         button_list = []
-        for menu in resource.values():
+        for menu in resources.values():
             button_list.append(menu.get('resource_name'))
         return button_list
 
@@ -75,7 +75,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'department', 'tel']
+        fields = ['id', 'username', 'nickname', 'head_pic', 'password', 'qywxid', 'department', 'tel']
 
     def create(self, validated_data):
         raise_errors_on_nested_writes('create', self, validated_data)

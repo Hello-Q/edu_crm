@@ -64,7 +64,7 @@ class ClueViewSet(views.FalseDelModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
+        print(request.data)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -74,7 +74,6 @@ class FollowRecordViewSet(views.FalseDelModelViewSet):
     """跟进记录"""
     queryset = models.FollowRecord.objects.filter(del_flag=0)
     serializer_class = serializers.FollowRecordSerializer
-
 
 
 class VisitViewSet(views.FalseDelModelViewSet):
