@@ -75,6 +75,7 @@ class Clue(BaseModel):
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
     status = models.IntegerField('线索状态', help_text='线索状态{}'.format(STATUS), default=0, choices=STATUS)
     next_time = models.DateTimeField(verbose_name='下次联系时间', help_text='下次联系时间', null=True, blank=True)
+    is_over = models.BooleanField(verbose_name='线索结束状态', default=False)
     """报名信息"""
     enroll_course = models.ManyToManyField('eduadmin.Course', verbose_name='报名课程', blank=True)
     enroll_date = models.DateField(verbose_name='报名日期', null=True, blank=True)
@@ -82,7 +83,7 @@ class Clue(BaseModel):
     class_hour = models.IntegerField(verbose_name='报名课时', null=True, blank=True)
     failing_type = models.ForeignKey('clue.FailingType', on_delete=models.CASCADE, verbose_name='未成交原因类型', null=True, blank=True)
     failing_cause = models.CharField(max_length=240, verbose_name='未成交原因', null=True, blank=True)
-    is_importance = models.NullBooleanField(verbose_name='重要客户', help_text='是否重要客户', null=True, blank=True)
+    is_importance = models.BooleanField(verbose_name='重要客户', help_text='是否重要客户', default=False)
     # 附加信息
     creator = models.ForeignKey('sys.User', related_name='clue_creator', on_delete=models.CASCADE, verbose_name='创建人', null=True, blank=True)
     operator = models.ForeignKey('sys.User', related_name='clue_operator', on_delete=models.CASCADE, verbose_name='更新人', null=True, blank=True)
@@ -93,7 +94,7 @@ class Clue(BaseModel):
     class Meta:
         verbose_name = '线索'
         verbose_name_plural = '线索管理'
-        ordering = ['is_importance', '-update_time']
+        ordering = ['is_over', '-is_importance', '-update_time']
         permissions = (
             ('view_clue', 'Can view 线索'),
         )
