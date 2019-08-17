@@ -1,7 +1,4 @@
-a = 123
+a = {'1': '2'}
 
-b = '46'
 
-c = a or b
-
-print(c)
+print(a.get('3'))

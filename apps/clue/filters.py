@@ -33,8 +33,6 @@ class ClueFilters(filters.FilterSet):
 
     def get_status(self, queryset, name, value):
         status_list = value.split(',')
-
-        print(status_list)
         queryset = queryset.filter(status__in=status_list)
         return queryset
 

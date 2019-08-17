@@ -36,6 +36,7 @@ urlpatterns = [
     path('clue/', include('apps.clue.urls')),
     path('eduadmin/', include('apps.eduadmin.urls')),
     path('auth/', include('apps.authentication.urls')),
+    path('data/', include('apps.data.urls'))
     # path('qywx/', include('apps.qywx.urls'))
 
 ] \

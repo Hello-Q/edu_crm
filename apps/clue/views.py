@@ -29,8 +29,8 @@ class ChannelViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Channel.objects.all()
     serializer_class = serializers.ChannelSerializer
-    filter_backends = (DjangoFilterBackend,)
     pagination_class = None
+    filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('type',)
 
 
@@ -64,7 +64,6 @@ class ClueViewSet(views.FalseDelModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(request.data)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

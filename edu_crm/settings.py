@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.sys',
     'apps.authentication',
     'apps.qywx',
+    'apps.data',
     # 第三方app
     'rest_framework',
     # 'rest_framework.authtoken',
