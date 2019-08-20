@@ -6,5 +6,6 @@ from . import views
 
 
 urlpatterns = [
-    path('funnel/', views.Funnel.as_view()),
+    path('funnel/', views.FunnelView.as_view()),
+    path('test/', views.ConversionView.as_view()),
 ]

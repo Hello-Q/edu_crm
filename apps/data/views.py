@@ -17,7 +17,8 @@ from rest_framework import viewsets
 from . import filters
 from utils.permissions import DataPermission
 
-class Funnel(ListAPIView):
+
+class FunnelView(ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Clue.objects.all()
     filter_backends = (DjangoFilterBackend,)
@@ -31,23 +32,58 @@ class Funnel(ListAPIView):
             data_permission = self.data_permission_class()
             queryset = data_permission.get_perm_queryset(queryset.model, request, queryset)
 
-        queryset = (queryset.aggregate(
+        queryset = queryset.aggregate(
             clue_num_proportion=Count('id', output_field=FloatField())/Count('id', output_field=FloatField()),
             clue_num_count=Count('id'),
             contact_again_proportion=(Count('id', filter=Q(status=1) | Q(status=2) | Q(status=3) | Q(status=5), output_field=FloatField()))/Count('id', output_field=FloatField()),
             contact_again_count=Count('id', filter=Q(status=1) | Q(status=2) | Q(status=3) | Q(status=5)),
             ordered_visit_proportion=(Count('id', filter=Q(status=2) | Q(status=3) | Q(status=5), output_field=FloatField()))/Count('id', output_field=FloatField()),
             ordered_visit_count=Count('id', filter=Q(status=2) | Q(status=3) | Q(status=5)),
-            visit_proportion=((Count('id', filter=Q(status=3) | Q(status=5), output_field=FloatField()))/Count('id', output_field=FloatField())),
+            visit_proportion=(Count('id', filter=Q(status=3) | Q(status=5), output_field=FloatField())/Count('id', output_field=FloatField())),
             visit_proportion_count=Count('id', filter=Q(status=3) | Q(status=5)),
             enroll_proportion=(Count('id', filter=Q(status=5), output_field=FloatField()))/Count('id', output_field=FloatField()),
             enroll_proportion_count=Count('id', filter=Q(status=5))
-        ))
+        )
 
         # 调整数据格式
         for key in queryset:
             if isinstance(queryset[key], float):
                 queryset[key] = round(queryset[key]*100, 2)
-        # queryset['intended_school'] = intended_school.name
         return Response(queryset)
 
+
+class ConversionView(ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Clue.objects.all()
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = filters.ConversionFilter
+    data_permission_class = DataPermission
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset()).filter(del_flag=False)
+        """根据数据权限过滤queryset"""
+        if not request.user.is_superuser:
+            data_permission = self.data_permission_class()
+            queryset = data_permission.get_perm_queryset(queryset.model, request, queryset)
+
+        queryset = queryset.values('intended_school', 'intended_school__name').annotate(
+            clue_num_count=Count('id'),
+            visit_proportion_count=Count('id', filter=Q(status=3) | Q(status=5)),
+            visit_rate=(Count('id', filter=Q(status=3) | Q(status=5), output_field=FloatField())/Count('id', output_field=FloatField())),
+            enroll_proportion_count=Count('id', filter=Q(status=5)),
+            enroll_rate=(Count('id', filter=Q(status=5), output_field=FloatField()))/Count('id', output_field=FloatField()),
+
+        ).order_by()
+
+        # 调整格式
+        queryset = list(queryset)
+        for i, school in enumerate(queryset):
+            school['visit_rate'] = round(school['visit_rate']*100, 2)
+            school['enroll_rate'] = round(school['enroll_rate']*100, 2)
+            queryset[i] = school
+
+        return Response(queryset)
+
+
+class SaleroomView():
+    pass
