@@ -18,7 +18,19 @@ from . import filters
 from utils.permissions import DataPermission
 
 
-class FunnelView(ListAPIView):
+class DataView(ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    data_permission_class = DataPermission
+
+    def filter_data_to_perm(self, queryset, request):
+        if not request.user.is_superuser:
+            data_permission = self.data_permission_class()
+            queryset = data_permission.get_perm_queryset(queryset.model, request, queryset)
+
+        return queryset
+
+
+class FunnelView(DataView):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Clue.objects.all()
     filter_backends = (DjangoFilterBackend,)
@@ -28,9 +40,7 @@ class FunnelView(ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset()).filter(del_flag=False)
         """根据数据权限过滤queryset"""
-        if not request.user.is_superuser:
-            data_permission = self.data_permission_class()
-            queryset = data_permission.get_perm_queryset(queryset.model, request, queryset)
+        queryset = self.filter_data_to_perm(queryset, request)
 
         queryset = queryset.aggregate(
             clue_num_proportion=Count('id', output_field=FloatField())/Count('id', output_field=FloatField()),
@@ -52,7 +62,7 @@ class FunnelView(ListAPIView):
         return Response(queryset)
 
 
-class ConversionView(ListAPIView):
+class ConversionView(DataView):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Clue.objects.all()
     filter_backends = (DjangoFilterBackend,)
@@ -62,9 +72,7 @@ class ConversionView(ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset()).filter(del_flag=False)
         """根据数据权限过滤queryset"""
-        if not request.user.is_superuser:
-            data_permission = self.data_permission_class()
-            queryset = data_permission.get_perm_queryset(queryset.model, request, queryset)
+        queryset = self.filter_data_to_perm(queryset, request)
 
         queryset = queryset.values('intended_school', 'intended_school__name').annotate(
             clue_num_count=Count('id'),
@@ -85,5 +93,37 @@ class ConversionView(ListAPIView):
         return Response(queryset)
 
 
-class SaleroomView():
-    pass
+class SummarizedView(DataView):
+
+    queryset = Clue.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset()).filter(del_flag=False)
+        """根据数据权限过滤queryset"""
+        queryset = self.filter_data_to_perm(queryset, request)
+        """"""
+        if request.query_params.get('group_by') == 'follow_up_person':
+            queryset = queryset.values('intended_school', 'intended_school__name', 'follow_up_person', 'follow_up_person__nickname')
+        elif request.query_params.get('group_by') == 'intended_school':
+            queryset = queryset.values('intended_school', 'intended_school__name')
+        else:
+            detail = {
+                'detail': '请指定正确的数据分组方式'
+            }
+            return Response(detail, status=status.HTTP_400_BAD_REQUEST)
+        queryset = queryset.annotate(
+            clue_num_count=Count('id'),
+
+            contact_again_count=Count('id', filter=Q(status=1) | Q(status=2) | Q(status=3) | Q(status=5)),
+
+            ordered_visit_count=Count('id', filter=Q(status=2) | Q(status=3) | Q(status=5)),
+
+            visit_proportion_count=Count('id', filter=Q(status=3) | Q(status=5)),
+
+            enroll_proportion_count=Count('id', filter=Q(status=5)),
+
+            fail_count=Count('id', filter=Q(status=4)),
+        )
+
+        return Response(queryset)
+

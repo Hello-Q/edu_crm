@@ -8,4 +8,5 @@ from . import views
 urlpatterns = [
     path('funnel/', views.FunnelView.as_view()),
     path('conversion/', views.ConversionView.as_view()),
+    path('summarized/', views.SummarizedView.as_view()),
 ]
