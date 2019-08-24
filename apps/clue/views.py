@@ -61,9 +61,33 @@ class ClueViewSet(views.FalseDelModelViewSet):
     filter_backends = (DjangoFilterBackend, )
     filter_class = filters.ClueFilters
 
+    def status_confirmation(self, request, serializer, *args):
+        """确认线索状态"""
+        print()
+        status = serializer.validated_data.get('status')
+        if status == 4 or status == 5:
+            return serializer
+        elif len(args[0].visit_set.all()) == 0 and status == 0:
+            return serializer
+        elif serializer.validated_data.get('next_time'):
+            serializer.validated_data['status'] = 1
+            return serializer
+        else:
+            detail = {
+                "status": [
+                    "“{}”不是合法选项。".format(status)
+                ]
+            }
+            return detail
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        # 状态确认
+        serializer = self.status_confirmation(request, serializer)
+        if isinstance(serializer, dict):
+            return Response(serializer, status=status.HTTP_400_BAD_REQUEST)
+
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -73,8 +97,12 @@ class ClueViewSet(views.FalseDelModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        # 状态确认
+        serializer = self.status_confirmation(request, serializer, instance)
+        if isinstance(serializer, dict):
+            return Response(serializer, status=status.HTTP_400_BAD_REQUEST)
 
+        self.perform_update(serializer)
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
             # forcibly invalidate the prefetch cache on the instance.
@@ -94,21 +122,73 @@ class VisitViewSet(views.FalseDelModelViewSet):
     queryset = models.Visit.objects.filter(del_flag=0)
     serializer_class = serializers.VisitSerializer
 
+    def modify_clue_status(self, serializer):
+        visit_status = serializer.validated_data.get('status') or 0
+        clue = serializer.validated_data['clue']
+        if visit_status == 1:
+            clue.status = 3
+            clue.save()
+        else:
+            if clue.status >= 2:
+                clue.status = 2
+                clue.save()
+
     def create(self, request, *args, **kwargs):
+        """选取访问时间"""
         try:
-            visit_time = request.data['visit_time']
-            if visit_time:
-                request.data['visit_time'] = visit_time
-            else:
-                request.data['visit_time'] = request.data['promise_visit_time']
-        except KeyError:
-            request.data['visit_time'] = request.data['promise_visit_time']
+            visit_time = request.data.get('visit_time') or request.data.get('promise_visit_time')
+            request.data['visit_time'] = visit_time
+        except KeyError as e:
+            print(e)
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        # 调整对应线索status
+        self.modify_clue_status(serializer)
+        visit_status = serializer.validated_data.get('status') or 0
+        clue = serializer.validated_data['clue']
+        if visit_status == 1:
+            clue.status = 3
+            clue.save()
+        else:
+            clue.status = 2
+            clue.save()
+
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        old = self.get_serializer(instance).data
+        if old['status'] != 0:
+            detail = {
+                'detail': '该访问已结束,无法再次修改'
+            }
+            return Response(detail, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            visit_time = request.data.get('visit_time') or request.data.get('promise_visit_time')
+            request.data['visit_time'] = visit_time
+        except KeyError as e:
+            print(e)
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        # 判断数据变化
+        serializer = self.change_in_data(serializer, instance, partial)
+        # 调整对应线索status
+        self.modify_clue_status(serializer)
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
     def change_in_data(self, serializer, instance, partial):
         # 判断约访是否发生变化
@@ -168,37 +248,6 @@ class VisitViewSet(views.FalseDelModelViewSet):
         new_serializer.is_valid()
         self.perform_create(new_serializer)
         return old_serializer
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        old = self.get_serializer(instance).data
-        if old['status'] != 0:
-            detail = {
-                'detail': '该访问已结束,无法再次修改'
-            }
-            return Response(detail, status=status.HTTP_404_NOT_FOUND)
-        try:
-            visit_time = request.data['visit_time']
-            if visit_time:
-                request.data['visit_time'] = visit_time
-            else:
-                request.data['visit_time'] = request.data['promise_visit_time']
-        except KeyError:
-            pass
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        # 判断数据变化
-        serializer = self.change_in_data(serializer, instance, partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
-
-        return Response(serializer.data)
-
 
 class ClueDuplicateCheck(APIView):
     """线索查重"""

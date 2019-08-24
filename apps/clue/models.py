@@ -79,7 +79,7 @@ class Clue(BaseModel):
     """报名信息"""
     enroll_course = models.ManyToManyField('eduadmin.Course', verbose_name='报名课程', blank=True)
     enroll_date = models.DateField(verbose_name='报名日期', null=True, blank=True)
-    enroll_sum = models.FloatField(verbose_name='报名价格', null=True, blank=True)
+    enroll_sum = models.FloatField(verbose_name='报名金额', null=True, blank=True)
     class_hour = models.IntegerField(verbose_name='报名课时', null=True, blank=True)
     failing_type = models.ForeignKey('clue.FailingType', on_delete=models.CASCADE, verbose_name='未成交原因类型', null=True, blank=True)
     failing_cause = models.CharField(max_length=240, verbose_name='未成交原因', null=True, blank=True)

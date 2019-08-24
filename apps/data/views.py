@@ -111,6 +111,7 @@ class SummarizedView(DataView):
                 'detail': '请指定正确的数据分组方式'
             }
             return Response(detail, status=status.HTTP_400_BAD_REQUEST)
+
         queryset = queryset.annotate(
             clue_num_count=Count('id'),
 
@@ -123,7 +124,12 @@ class SummarizedView(DataView):
             enroll_proportion_count=Count('id', filter=Q(status=5)),
 
             fail_count=Count('id', filter=Q(status=4)),
-        )
+
+            enroll_sum=Sum('enroll_sum', filter=Q(status=5))
+
+        ).order_by('-enroll_sum')
+
+
 
         return Response(queryset)
 
