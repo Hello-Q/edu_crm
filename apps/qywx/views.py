@@ -11,6 +11,8 @@ from apps.qywx.qywx.api.AbstractApi import ApiException
 from utils.permissions import DataPermission
 from apps.clue.models import Clue
 from apps.sys.models import User
+
+from apps.clue.serializers import ClueSerializer
 import time
 
 # 客户联系应用的secret
@@ -180,27 +182,32 @@ class SyncContacts(APIView):
         return external_userids
 
     def get_external_user_detail(self, external_userids):
+        """获取外部联系人详情"""
         for external_userid in external_userids:
             response = request_api(api_app_CUSTOMER_CONTACT, CORP_API_TYPE['GET_EXTERNAL_CONTACT_DETAIL'],
                                    {'external_userid': external_userid})
             yield response
 
-    def save_external_user_detail(self, external_user_detail):
+    def processing_data(self, external_user_detail):
         data_list = list()
+
         for external_user in external_user_detail:
             if external_user['errcode'] == 0:
-                print(external_user)
                 """"外部联系人信息"""
                 external_contact = external_user['external_contact']
+
                 external_userid = external_contact['external_userid']  # 外部联系人id
+                external_name = external_contact['name']
                 """跟进人填写信息"""
                 follow_user = external_user['follow_user'][0]
 
-                userid = follow_user['userid']  # 跟进人企业微信id
+                qywxid = follow_user['userid']  # 跟进人企业微信id
+                userid = User.objects.get(qywxid=qywxid)
 
-                customer_name = follow_user['remark']  # 客户备注名称
+                customer_name = follow_user.get('remark') or external_name  # 客户备注名称
                 remark = follow_user['description']  # 客户备注内容
-                tel = follow_user['remark_mobiles'] # 客户电话
+                tel = follow_user['remark_mobiles']  # 客户电话
+                channel = follow_user.get('state')  # 添加渠道
                 if tel:
                     tel = tel[0]
                 create_time = follow_user['createtime']
@@ -208,13 +215,25 @@ class SyncContacts(APIView):
                 external_user_name = external_contact['name']
                 data = {
                     'external_userid': external_userid,
+                    'channel': channel,
                     'name': customer_name,
                     'tel': tel,
                     'create_time': create_time,
                     'update_time': create_time,
-
-
+                    'next_time': None,
+                    'creator': userid,
+                    'operator': userid,
+                    'remark': remark,
                 }
+                data_list.append(data)
+
+        return data_list
+
+    def save_data(self, data_list):
+        for data in data_list:
+            ser = ClueSerializer(data=data)
+            ser.is_valid()
+            print(ser.errors)
 
     def get(self, request, format=None):
         """要求具有线索查看, 新增权限"""
@@ -227,6 +246,6 @@ class SyncContacts(APIView):
         follow_users = self.get_follow_users_qywxid(request.user)
         external_userids = self.get_external_userids(follow_users)
         external_user_detail = self.get_external_user_detail(external_userids)
-        data = self.save_external_user_detail(external_user_detail)
-
-        return Response({1: external_user_detail})
+        data = self.processing_data(external_user_detail)
+        self.save_data(data)
+        return Response({1: 1})

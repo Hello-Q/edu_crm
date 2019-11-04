@@ -36,8 +36,8 @@ urlpatterns = [
     path('clue/', include('apps.clue.urls')),
     path('eduadmin/', include('apps.eduadmin.urls')),
     path('auth/', include('apps.authentication.urls')),
-    path('data/', include('apps.data.urls'))
-    # path('qywx/', include('apps.qywx.urls'))
+    path('data/', include('apps.data.urls')),
+    path('qywx/', include('apps.qywx.urls'))
 
 ] \
               # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

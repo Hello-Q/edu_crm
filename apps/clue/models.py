@@ -69,7 +69,7 @@ class Clue(BaseModel):
     sex = models.IntegerField(choices=((0, '女'), (1, '男'),), null=True, blank=True,
                               verbose_name='性别', help_text='{}'.format(SEX))
     address = models.CharField(max_length=40, verbose_name='地址', help_text='地址', null=True, blank=True)
-    consult_date = models.DateField('录入日期', help_text='录入日期',)
+    consult_date = models.DateField('录入日期', help_text='录入日期', auto_now_add=True)
     intended_course = models.ManyToManyField('eduadmin.Course', related_name='clue_intended_course', verbose_name='意向课程', help_text='意向课程',  blank=True)
     intended_school = models.ForeignKey('sys.Department', related_name='clue_intended_school', verbose_name='意向校区', help_text='意向校区', on_delete=models.CASCADE, null=True, blank=True)
     follow_up_person = models.ForeignKey('sys.User', related_name='clue_follow_up_people', verbose_name='跟进人', help_text='跟进人', on_delete=models.CASCADE, null=True, blank=True)
@@ -85,8 +85,8 @@ class Clue(BaseModel):
     failing_cause = models.CharField(max_length=240, verbose_name='未成交原因', null=True, blank=True)
     is_importance = models.BooleanField(verbose_name='重要客户', help_text='是否重要客户', default=False)
     # 附加信息
-    creator = models.ForeignKey('sys.User', related_name='clue_creator', on_delete=models.CASCADE, verbose_name='创建人', null=True, blank=True)
-    operator = models.ForeignKey('sys.User', related_name='clue_operator', on_delete=models.CASCADE, verbose_name='更新人', null=True, blank=True)
+    creator = models.ForeignKey('sys.User', related_name='clue_creator', on_delete=models.CASCADE, verbose_name='创建人')
+    operator = models.ForeignKey('sys.User', related_name='clue_operator', on_delete=models.CASCADE, verbose_name='更新人')
 
     def __str__(self):
         return self.name
@@ -136,4 +136,3 @@ class FollowRecord(BaseModel):
     content = models.TextField(max_length=1000)
     creator = models.ForeignKey('sys.User', related_name='follow_creator', on_delete=models.DO_NOTHING, verbose_name='创建人')
     operator = models.ForeignKey('sys.User', related_name='follow_operator', on_delete=models.DO_NOTHING, verbose_name='更新人')
-
