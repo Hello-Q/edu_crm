@@ -1,3 +1,5 @@
+# 增加权限权限查询的链路，配合vue权限管理
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.auth.backends import ModelBackend

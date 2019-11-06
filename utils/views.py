@@ -1,6 +1,25 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .permissions import DataPermission
+from rest_framework.generics import DestroyAPIView
+
+
+class FalseDestroyAPIView(DestroyAPIView):
+    """
+    用户执行删除操作时，设置数据库del_flag=Ture，执行假删除操作
+    """
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # 假删除操作
+        if instance.del_flag:
+            return Response({"detail": "资源不存在或已被删除"}, status=status.HTTP_404_NOT_FOUND)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.del_flag = True
+        instance.save()
+
 
 
 class FalseDelModelViewSet(viewsets.ModelViewSet):

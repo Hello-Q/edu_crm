@@ -70,6 +70,7 @@ class ExpandDjangoModelPermissions(DjangoModelPermissions):
 
         return [perm % kwargs for perm in self.perms_map[method]]
 
+    # 什么都没改
     def _queryset(self, view):
         assert hasattr(view, 'get_queryset') \
             or getattr(view, 'queryset', None) is not None, (

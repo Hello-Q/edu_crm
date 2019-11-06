@@ -13,7 +13,8 @@ from utils.permissions import ExpandDjangoModelPermissions
 from . import filters
 
 
-class ChannelTypeViewSet(views.FalseDelModelViewSet):
+class ChannelTypeViewSet(viewsets.ModelViewSet,
+                         views.FalseDestroyAPIView):
     """
     渠道分类
     """

@@ -170,6 +170,7 @@ class User(AbstractUser, BaseModel):
     def __str__(self):
         return self.nickname
 
+    # 什么都没改
     def has_perm(self, perm, obj=None):
         """
         Return True if the user has the specified permission. Query all
@@ -185,11 +186,11 @@ class User(AbstractUser, BaseModel):
         # Otherwise we need to check the backends.
         return _user_has_perm(self, perm, obj)
 
+    # 什么都没改
     def has_perms(self, perm_list, obj=None):
         """
         Return True if the user has each of the specified permissions. If
         object is passed, check if the user has all required perms for it.
         """
-
         return all(self.has_perm(perm, obj) for perm in perm_list)
 
